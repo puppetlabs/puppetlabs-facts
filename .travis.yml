@@ -1,0 +1,9 @@
+sudo: false
+language: ruby
+cache: bundler
+rvm:
+- 2.4
+- 2.3
+
+script:
+- bundle exec rake spec rubocop

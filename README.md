@@ -1,49 +1,45 @@
-
 # facts
 
 #### Table of Contents
 
 1. [Description](#description)
 2. [Requirements](#requirements)
-3. [Usage - Configuration options and additional functionality](#usage)
+3. [Usage](#usage)
 4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Getting help - Some Helpful commands](#getting-help)
 
 ## Description
 
-This module provides the facts task. This task allows you to discover facts about remote machines in your infrastructure.
+This module provides a collection of facts plans all of which retrieve facts from the specified nodes but each of them processes the retrieved facts differently (if at all). The provided plans are:
+* `facts` - retrieves the facts and then stores them in the inventory, returns a result set wrapping result objects for each specified node which in turn wrap the retrieved facts
+* `facts::info` - retrieves the facts and returns information about each node's OS compiled from the `os` fact value retrieved from that node
+* `facts::retrieve` - retrieves the facts and without further processing returns a result set wrapping result objects for each specified node which in turn wrap the retrieved facts (this plan is internally used by the other two)
 
 ## Requirements
 
-This module is compatible with Puppet Enterprise and Puppet Bolt.
-
-* To run tasks with Puppet Enterprise, PE 2017.3 or later must be installed on the machine from which you are running task commands. Machines receiving task requests must be Puppet agents.
-
-* To run tasks with Puppet Bolt, Bolt 0.5 or later must be installed on the machine from which you are running task commands. Machines receiving task requests must have SSH or WinRM services enabled.
+This module is compatible with the version of Puppet Bolt it ships with.
 
 ## Usage
 
-To run a facts task use the task command, specifying the fact you want to retrieve.
+To run the facts plan run
 
-* With PE on the command line, run `puppet task run facts fact=<FACT>`.
-* With Bolt on the command line, run `bolt task run facts fact=<FACT>`.
+```
+bolt plan run facts --nodes node1.example.com,node2.example.com
+```
 
-For example, to check the operating system family on a machine, run:
+### Parameters
 
-* With PE, run `puppet task run facts fact=osfamily --nodes neptune`
-* With Bolt, run `bolt task run facts fact=osfamily --nodes neptune --modulepath ~/modules`
+All plans have only one parameter:
 
-You can also run tasks in the PE console. See PE task documentation for complete information.
+* **nodes** - The nodes to retrieve the facts from.
 
 ## Reference
 
-To view the available actions and parameters, on the command line, run `puppet task show facts` or see the facts module page on the [Forge](https://forge.puppet.com/puppetlabs/facts/tasks).
-
-For a complete list of facts that are supported, see the Puppet [core facts](https://docs.puppet.com/facter/latest/core_facts.html) documentation.
-
-## Getting Help
-
-To display help for the facts task, run `puppet task show facts`
-
-To show help for the task CLI, run `puppet task run --help` or `bolt task run --help`
-
+The core functionality is implemented in the `facts::retrieve` plan, which
+runs the `facts::bash` task for `ssh://` (and possibly `local://` if the bash
+shell is available on the local host) targets, the `facts::powershell` task
+for `winrm://` targets and `facts::ruby` for `pcp://` targets. Other targets
+are currently not supported. The tasks either run `facter --json` command if
+facter is available on the target and return its output or - as a fallback -
+compile and return information mimicking that provided by the facter's `os`
+fact. The plan then collects the results of the task runs on the individual
+nodes and returns them wrapped in a ResultSet object.

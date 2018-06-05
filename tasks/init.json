@@ -1,10 +1,9 @@
 {
-  "description": "Inspect the value of system facts",
-  "input_method": "stdin",
-  "parameters": {
-    "fact": {
-      "description": "The name of the fact to retrieve",
-      "type": "Optional[String]"
-    }
-  }
+  "description": "Gather system facts",
+  "parameters": {},
+  "implementations": [
+    {"name": "ruby.rb", "requirements": ["puppet-agent"]},
+    {"name": "powershell.ps1", "requirements": ["powershell"]},
+    {"name": "bash.sh", "requirements": ["shell"]}
+  ]
 }
