@@ -201,7 +201,7 @@ module BoltSpec
 
       def assert_call_expectations
         @task_doubles.map do |taskname, doub|
-#          doub.assert_called(taskname)
+          doub.assert_called(taskname)
         end
       end
 

@@ -71,3 +71,6 @@ Metrics/ParameterLists:
 
 Metrics/PerceivedComplexity:
   Enabled: false
+
+Bundler/DuplicatedGem:
+  Enabled: false
