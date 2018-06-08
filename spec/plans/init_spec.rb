@@ -26,7 +26,7 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output)
+      inventory.expects(:add_facts).with(target, fact_output).returns(fact_output)
 
       expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(fact_output))
     end
@@ -44,7 +44,7 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output)
+      inventory.expects(:add_facts).with(target, fact_output).returns(fact_output)
 
       expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(fact_output))
     end
@@ -62,7 +62,7 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output)
+      inventory.expects(:add_facts).with(target, fact_output).returns(fact_output)
 
       expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(fact_output))
     end
@@ -80,7 +80,7 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output)
+      inventory.expects(:add_facts).with(target, fact_output).returns(fact_output)
 
       expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(fact_output))
     end
@@ -99,7 +99,9 @@ describe 'facts' do
     it 'contains OS information for target' do
       target_results = nodes.each_with_object({}) { |node, h| h[node] = fact_output(node) }
       expect_task('facts').return_for_targets(target_results)
-      nodes.each { |node| inventory.expects(:add_facts).with(Bolt::Target.new(node), fact_output(node)) }
+      nodes.each do |node|
+        inventory.expects(:add_facts).with(Bolt::Target.new(node), fact_output(node)).returns(fact_output(node))
+      end
 
       result_set = Bolt::ResultSet.new(
         nodes.map { |node| Bolt::Result.new(Bolt::Target.new(node), value: fact_output(node)) }
