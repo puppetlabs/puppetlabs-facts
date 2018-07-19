@@ -2,7 +2,7 @@
 
 # Delegate to facter if available
 if (Get-Command facter -ErrorAction SilentlyContinue) {
-    facter -p --json
+    facter -p --json --show-legacy
 }
 else {
     # The number 2 in the condition below is the value of
