@@ -66,7 +66,7 @@ gems = {}
 
 gems['facter'] = location_for(facter_version) if facter_version
 gems['hiera'] = location_for(hiera_version) if hiera_version
-gem 'bolt', '~> 0.20.3'
+gem 'bolt', '~> 0.21.3'
 gem 'puppet', git: 'https://github.com/puppetlabs/puppet.git'
 
 if Gem.win_platform? && puppet_version =~ %r{^(file:///|git://)}
