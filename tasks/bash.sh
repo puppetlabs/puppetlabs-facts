@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Delegate to facter if available
+export PATH="$PATH:/opt/puppetlabs/bin"
 command -v facter > /dev/null 2>&1 && exec facter -p --json --show-legacy
 
 minor () {
