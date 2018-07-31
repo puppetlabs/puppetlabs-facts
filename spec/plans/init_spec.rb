@@ -31,11 +31,11 @@ describe 'facts' do
       expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(fact_output))
     end
 
-    it 'omits failed targets' do
+    it 'does not mask errors' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(err_output))
+      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 nodes")
     end
   end
 
@@ -49,11 +49,11 @@ describe 'facts' do
       expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(fact_output))
     end
 
-    it 'omits failed targets' do
+    it 'does not mask errors' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(err_output))
+      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 nodes")
     end
   end
 
@@ -67,11 +67,11 @@ describe 'facts' do
       expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(fact_output))
     end
 
-    it 'omits failed targets' do
-      expect_task('facts').always_return(err_output)
+    it 'does not mask errors' do
+     expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(err_output))
+      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 nodes")
     end
   end
 
@@ -85,11 +85,11 @@ describe 'facts' do
       expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(fact_output))
     end
 
-    it 'omits failed targets' do
+    it 'does not mask errors' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'nodes' => [node]).value).to eq(results(err_output))
+      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 nodes")
     end
   end
 
@@ -109,15 +109,12 @@ describe 'facts' do
       expect(run_plan('facts', 'nodes' => nodes).value).to eq(result_set)
     end
 
-    it 'omits failed targets' do
+    it 'does not mask errors' do
       target_results = nodes.each_with_object({}) { |node, h| h[node] = err_output(node) }
       expect_task('facts').return_for_targets(target_results)
       inventory.expects(:add_facts).never
 
-      result_set = Bolt::ResultSet.new(
-        nodes.map { |node| Bolt::Result.new(Bolt::Target.new(node), value: err_output(node)) }
-      )
-      expect(run_plan('facts', 'nodes' => nodes).value).to eq(result_set)
+      expect(run_plan('facts', 'nodes' => nodes).value.msg).to eq("Plan aborted: run_task 'facts' failed on 3 nodes")
     end
   end
 end
