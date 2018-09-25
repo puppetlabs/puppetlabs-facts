@@ -66,8 +66,10 @@ gems = {}
 
 gems['facter'] = location_for(facter_version) if facter_version
 gems['hiera'] = location_for(hiera_version) if hiera_version
-gem 'bolt', '~> 0.21.3'
-gem 'puppet', git: 'https://github.com/puppetlabs/puppet.git'
+# Temporarily pin to Puppet 6. 6.0.1 introduces a change in behavior that
+# will require a newer release of Bolt for bolt_spec to work.
+gem 'bolt', '~> 0.23.0'
+gem 'puppet', '= 6.0.0'
 
 if Gem.win_platform? && puppet_version =~ %r{^(file:///|git://)}
   # If we're using a Puppet gem on Windows which handles its own win32-xxx gem
