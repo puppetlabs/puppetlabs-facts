@@ -55,7 +55,9 @@ group :system_tests do
   gem "beaker-rspec"
 end
 
-puppet_version = ENV['PUPPET_GEM_VERSION']
+# Temporarily pin to Puppet 6. 6.0.1 introduces a change in behavior that
+# will require a newer release of Bolt for bolt_spec to work.
+puppet_version = ENV['PUPPET_GEM_VERSION'] || '= 6.0.0'
 facter_version = ENV['FACTER_GEM_VERSION']
 hiera_version = ENV['HIERA_GEM_VERSION']
 
@@ -66,10 +68,8 @@ gems = {}
 
 gems['facter'] = location_for(facter_version) if facter_version
 gems['hiera'] = location_for(hiera_version) if hiera_version
-# Temporarily pin to Puppet 6. 6.0.1 introduces a change in behavior that
-# will require a newer release of Bolt for bolt_spec to work.
+gems['puppet'] = location_for(puppet_version) if puppet_version
 gem 'bolt', '~> 0.23.0'
-gem 'puppet', '= 6.0.0'
 
 if Gem.win_platform? && puppet_version =~ %r{^(file:///|git://)}
   # If we're using a Puppet gem on Windows which handles its own win32-xxx gem

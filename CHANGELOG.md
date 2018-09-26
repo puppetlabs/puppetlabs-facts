@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3.1
+### Fixed
+- Allow setting Puppet gem version via `PUPPET_GEM_VERSION` so we can use Puppet 5 to ship the module.
+
 ## 0.3.0
 ### Fixed
 - Task metadata specifies environment input to work around BOLT-691.
