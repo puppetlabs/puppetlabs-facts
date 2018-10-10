@@ -1,8 +1,27 @@
 #!/usr/bin/env bash
+# The install_shell.sh implementation from the puppetlabs-puppet_agent module can use this
+# by passign positional argument with value "platform" or "release" to get only the platform
+# or version string only. 
 
 # Delegate to facter if available
 export PATH="$PATH:/opt/puppetlabs/bin"
-command -v facter > /dev/null 2>&1 && exec facter -p --json --show-legacy
+if test "x$1" = "x"; then
+    command -v facter > /dev/null 2>&1 && exec facter -p --json --show-legacy
+else
+    if command -v facter >/dev/null 2>&1; then
+        if test "x$1" = "xplatform"; then
+            platform=$(facter --yaml os.name)
+            platform=$(echo $platform | cut -d ":" -f 2 | sed 's/\"//g;s/^[ \t]*//;s/[ \t]*$//')
+            echo $platform
+            exit 0
+        elif test "x$1" = "xrelease"; then
+            release=$(facter --yaml os.release.full)
+            release=$(echo $release | cut -d ":" -f 2 | sed 's/\"//g;s/^[ \t]*//;s/[ \t]*$//')
+            echo $release
+            exit 0
+        fi
+    fi
+fi
 
 minor () {
     minor="${*#*.}"
@@ -51,6 +70,15 @@ fi
 if [ -z "${name}" ]; then
     name=$(uname)
     release=$(uname -r)
+fi
+
+# puppet_agent install task can ask for each of these values
+if test "x$1" = "xplatform"; then
+    echo $name
+    exit 0
+elif test "x$1" = "xrelease"; then
+    echo $release
+    exit 0
 fi
 
 case $name in
