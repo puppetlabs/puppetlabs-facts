@@ -6,3 +6,7 @@ require 'puppet_blacksmith/rake_tasks' if Bundler.rubygems.find_name('puppet-bla
 require 'puppet-lint/tasks/puppet-lint'
 
 PuppetLint.configuration.send('disable_relative')
+
+task :task_acceptance => [:spec_prep, :beaker] do
+  # nothing to do
+end
