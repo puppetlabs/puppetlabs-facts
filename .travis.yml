@@ -3,7 +3,9 @@ language: ruby
 cache: bundler
 rvm:
 - 2.4
-bundler_args: --without system_tests
+env:
+  global:
+    - GEM_BOLT=true
 script:
   - 'bundle exec rake $CHECK'
 matrix:
