@@ -1,4 +1,7 @@
 # Change Log
+## 0.4.0
+### Added
+- The `bash.sh` implementation can accept the positional arguments `platform` or `release` to support the `puppet_agent::install` task. 
 
 ## 0.3.1
 ### Fixed

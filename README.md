@@ -19,6 +19,29 @@ The provided tasks:
 * `facts::powershell` - powershell implementation of fact gathering, used by the `facts` task.
 * `facts::ruby` - ruby implementation of fact gathering, used by the `facts` task.
 
+`puppet_agent` module support:
+The `puppet_agent::install_shell` task uses the `bash.sh` implementation code to gather facts. When `bash.sh` is invoked with the positional argument `platform` or `release` *only* the requested fact is returned. 
+
+Example
+```
+root@y77tzpv6qxnx5at:~# ./bash.sh 
+{
+  "os": {
+    "name": "Ubuntu",
+    "release": {
+      "full": "16.04",
+      "major": "16",
+      "minor": "04"
+    },
+    "family": "Debian"
+  }
+}
+root@y77tzpv6qxnx5at:~# ./bash.sh "release"
+16.04
+root@y77tzpv6qxnx5at:~# ./bash.sh "platform"
+Ubuntu
+```
+
 ## Requirements
 
 This module is compatible with the version of Puppet Bolt it ships with.

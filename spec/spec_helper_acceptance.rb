@@ -4,22 +4,24 @@ require 'puppet'
 require 'beaker-rspec'
 require 'beaker/puppet_install_helper'
 require 'beaker/module_install_helper'
-require 'beaker-task_helper'
+require 'puppetlabs_spec_helper/module_spec_helper'
 
 run_puppet_install_helper
-install_ca_certs unless pe_install?
-install_bolt_on(hosts, '0.21.3') unless pe_install?
+install_ca_certs
 install_module_on(hosts)
 install_module_dependencies_on(hosts)
 
+base_dir = File.dirname(File.expand_path(__FILE__))
+
 UNSUPPORTED_PLATFORMS = %w[Solaris AIX].freeze
+
+base_dir = File.dirname(File.expand_path(__FILE__))
 
 RSpec.configure do |c|
   # Readable test descriptions
   c.formatter = :documentation
 
-  # Configure all nodes in nodeset
-  c.before :suite do
-    run_puppet_access_login(user: 'admin') if pe_install?
-  end
+  # should we just use rspec_puppet
+  c.add_setting :module_path
+  c.module_path = File.join(base_dir, 'fixtures', 'modules')
 end
