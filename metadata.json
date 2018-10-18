@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-facts",
-  "version": "0.3.1",
+  "version": "0.4.1",
   "author": "puppet",
   "summary": "Tasks that inspect the value of system facts",
   "license": "Apache-2.0",

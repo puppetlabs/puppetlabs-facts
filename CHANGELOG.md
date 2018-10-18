@@ -1,4 +1,8 @@
 # Change Log
+## 0.4.1
+### Changed
+- Only install bolt for testing when GEM_BOLT environment variable is set.
+
 ## 0.4.0
 ### Added
 - The `bash.sh` implementation can accept the positional arguments `platform` or `release` to support the `puppet_agent::install` task. 
