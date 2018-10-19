@@ -53,6 +53,11 @@ group :system_tests do
   gem "beaker-pe",
       require: false
   gem "beaker-rspec"
+  
+  if ENV['GEM_BOLT']
+    gem 'bolt', git: "https://github.com/puppetlabs/bolt.git", ref: "60eabc621eeaa12a157170aa0e99b29ed5aca4cb", require: false
+    gem 'beaker-task_helper', '~> 1.5.2', require: false
+  end
 end
 
 # Temporarily pin to Puppet 6. 6.0.1 introduces a change in behavior that
@@ -69,9 +74,6 @@ gems = {}
 gems['facter'] = location_for(facter_version) if facter_version
 gems['hiera'] = location_for(hiera_version) if hiera_version
 gems['puppet'] = location_for(puppet_version) if puppet_version
-# gem 'bolt', '~> 1.0.0', require: false
-gem 'bolt', git: "https://github.com/puppetlabs/bolt.git", ref: "60eabc621eeaa12a157170aa0e99b29ed5aca4cb", require: false
-gem 'beaker-task_helper', '~> 1.5.2', require: false
 
 if Gem.win_platform? && puppet_version =~ %r{^(file:///|git://)}
   # If we're using a Puppet gem on Windows which handles its own win32-xxx gem
