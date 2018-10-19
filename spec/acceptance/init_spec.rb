@@ -28,16 +28,18 @@ describe 'facts task' do
   describe 'puppet facts' do
     let(:script) { File.join(__dir__, '..', '..', 'tasks', 'bash.sh') }
 
-    it 'bash implementation returns platform' do
-      result = run_script(script, 'default', ['platform'], inventory: inventory)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['stdout']).to match(/#{platform}/)
-    end
+    unless select_hosts(platform: /win/).count > 0 
+      it 'bash implementation returns platform' do
+        result = run_script(script, 'default', ['platform'], inventory: inventory)
+        expect(result[0]['status']).to eq('success')
+        expect(result[0]['result']['stdout']).to match(/#{platform}/)
+      end
 
-    it 'bash implementation returns release' do
-      result = run_script(script, 'default', ['release'], inventory: inventory)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['stdout']).to match(/#{release}/)
+      it 'bash implementation returns release' do
+        result = run_script(script, 'default', ['release'], inventory: inventory)
+        expect(result[0]['status']).to eq('success')
+        expect(result[0]['result']['stdout']).to match(/#{release}/)
+      end
     end
 
     it 'includes legacy and structured facts' do
