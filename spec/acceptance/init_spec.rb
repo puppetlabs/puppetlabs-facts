@@ -38,18 +38,17 @@ describe 'facts task' do
       it 'bash implementation returns release' do
         result = run_script(script, 'default', ['release'], inventory: inventory)
         expect(result[0]['status']).to eq('success')
-        expect(result[0]['result']['stdout']).to match(/#{release}/)
+        expect(release).to match(/#{result[0]['result']['stdout'].strip}/)
       end
     end
 
     it 'includes legacy and structured facts' do
       result = run_task('facts', 'default', config: config, inventory: inventory)
+
       expect(result[0]['status']).to eq('success')
       facts = result[0]['result']
-      expect(facts).to include('osfamily', 'operatingsystem', 'os')
-
-      expect(facts['osfamily']).to eq(os_family_fact)
-      expect(facts['operatingsystem']).to eq(operating_system_fact)
+      expect(facts).to include('os')
+      expect(facts['os']). to include('family', 'name', 'release')
 
       expect(facts['os']['family']).to eq(os_family_fact)
       expect(facts['os']['name']).to eq(operating_system_fact)

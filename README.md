@@ -63,6 +63,5 @@ All plans have only one parameter:
 ## Reference
 
 The core functionality is implemented in the `facts` task, which provides implementations
-for the `shell`, `powershell`, and `puppet-agent` features. The tasks run `facter --json`
-if facter is available on the target or - as a fallback - compile and return information
-mimicking that provided by facter's `os` fact.
+for the `shell`, `powershell`, and `puppet-agent` features. The powerhsell and bash implementations of the task compile and return information
+mimicking that provided by facter's `os` fact. When the `puppet-agent` feature is available the ruby implementation will return the result running `facter --json` on the target.
