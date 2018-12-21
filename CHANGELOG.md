@@ -1,4 +1,13 @@
 # Change Log
+
+## 0.5.0
+### Changed
+- Extra implementations of the primary task will now be hidden in tools that support implementations and the 'private' property (like Bolt).
+- Only use facter to compute facts when the puppet-agent feature is available on target in the ruby implementation.
+
+### Fixed
+- Works with Facter 2.
+
 ## 0.4.1
 ### Changed
 - Only install bolt for testing when GEM_BOLT environment variable is set.
