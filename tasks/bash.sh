@@ -14,6 +14,8 @@ if [ -f /etc/redhat-release ]; then
         name=CentOS
     elif egrep -iq 'Fedora release' /etc/redhat-release; then
         name=Fedora
+    elif egrep -iq "(.*red)(.*hat)" /etc/redhat-release; then
+        name=RedHat
     fi
     release=$(sed -r -e 's/^.* release ([0-9]+(\.[0-9]+)?).*$/\1/' \
                   /etc/redhat-release)
@@ -24,6 +26,9 @@ if [ -z "${name}" ]; then
     if [ -n "$LSB_RELEASE" ]; then
         if [ -z "$name" ]; then
             name=$($LSB_RELEASE -i | sed -re 's/^.*:[ \t]*//')
+            if echo "${name}" | egrep -iq "(.*red)(.*hat)"; then
+                name="RedHat"
+            fi
         fi
         release=$($LSB_RELEASE -r | sed -re 's/^.*:[ \t]*//')
     fi
