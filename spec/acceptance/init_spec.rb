@@ -4,7 +4,7 @@ require 'spec_helper_acceptance'
 require 'beaker-task_helper/inventory'
 require 'bolt_spec/run'
 
-describe 'facts task' do
+describe 'facts task', unless: fact_on(default, 'os.release.full') == '2008 R2' do
   include Beaker::TaskHelper::Inventory
   include BoltSpec::Run
 
@@ -17,7 +17,7 @@ describe 'facts task' do
   end
 
   def inventory
-    hosts_to_inventory
+    hosts_to_inventory.merge('features' => ['puppet-agent'])
   end
 
   operating_system_fact = fact('operatingsystem')
@@ -26,32 +26,16 @@ describe 'facts task' do
   release = fact('os.release.full')
 
   describe 'puppet facts' do
-    let(:script) { File.join(__dir__, '..', '..', 'tasks', 'bash.sh') }
-
-    unless select_hosts(platform: /win/).count > 0 
-      it 'bash implementation returns platform' do
-        result = run_script(script, 'default', ['platform'], inventory: inventory)
-        expect(result[0]['status']).to eq('success')
-        expect(result[0]['result']['stdout']).to match(/#{platform}/)
-      end
-
-      it 'bash implementation returns release' do
-        result = run_script(script, 'default', ['release'], inventory: inventory)
-        expect(result[0]['status']).to eq('success')
-        expect(release).to match(/#{result[0]['result']['stdout'].strip}/)
-      end
-    end
-
     it 'includes legacy and structured facts' do
       result = run_task('facts', 'default', config: config, inventory: inventory)
-
       expect(result[0]['status']).to eq('success')
       facts = result[0]['result']
-      expect(facts).to include('os')
-      expect(facts['os']). to include('family', 'name', 'release')
 
+      expect(facts).to include('osfamily', 'operatingsystem', 'os')
+      expect(facts['osfamily']).to eq(os_family_fact)
+      expect(facts['operatingsystem']).to eq(operating_system_fact)
       expect(facts['os']['family']).to eq(os_family_fact)
-      expect(facts['os']['name']).to eq(operating_system_fact)
+      expect(facts['os']['release']['full']).to eq(release)
     end
   end
 end
