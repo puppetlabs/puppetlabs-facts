@@ -37,4 +37,9 @@ def facter_executable
 end
 
 # Delegate to facter
-exec(facter_executable, '-p', '--json', '--show-legacy')
+stdout, _stderr, _status = Open3.capture3("#{facter_executable} -v")
+if stdout =~ /^[0-2]\./
+  exec(facter_executable, '-p', '--json')
+else
+  exec(facter_executable, '-p', '--json', '--show-legacy')
+end
