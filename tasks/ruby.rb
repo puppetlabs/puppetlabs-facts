@@ -1,5 +1,6 @@
-#!/usr/bin/env ruby
+#!/opt/puppetlabs/puppet/bin/ruby
 # frozen_string_literal: true
+require 'open3'
 
 def facter_executable
   if Gem.win_platform?
