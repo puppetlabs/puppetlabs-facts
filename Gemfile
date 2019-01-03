@@ -55,7 +55,7 @@ group :system_tests do
   gem "beaker-rspec"
   
   if ENV['GEM_BOLT']
-    gem 'bolt', git: "https://github.com/puppetlabs/bolt.git", ref: "60eabc621eeaa12a157170aa0e99b29ed5aca4cb", require: false
+    gem 'bolt', '~> 1.4', require: false
     gem 'beaker-task_helper', '~> 1.5.2', require: false
   end
 end
