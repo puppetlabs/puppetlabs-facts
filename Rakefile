@@ -7,6 +7,4 @@ require 'puppet-lint/tasks/puppet-lint'
 
 PuppetLint.configuration.send('disable_relative')
 
-task :task_acceptance => [:spec_prep, :beaker] do
-  # nothing to do
-end
+task :task_acceptance => [:spec_prep, :beaker]
