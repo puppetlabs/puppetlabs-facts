@@ -1,27 +1,38 @@
-sudo: false
+---
+dist: trusty
 language: ruby
 cache: bundler
-rvm:
-- 2.4
-env:
-  global:
-    - GEM_BOLT=true
+before_install:
+  - bundle -v
+  - rm -f Gemfile.lock
+  - gem update --system $RUBYGEMS_VERSION
+  - gem --version
+  - bundle -v
 script:
   - 'bundle exec rake $CHECK'
+bundler_args: 
+rvm:
+  - 2.5.1
+env:
+  global:
+    - BEAKER_PUPPET_COLLECTION=puppet6 PUPPET_GEM_VERSION="~> 6.0"
+    - BEAKER_PUPPET_COLLECTION=puppet6 PUPPET_GEM_VERSION="~> 6.0" GEM_BOLT=true
 matrix:
   fast_finish: true
   include:
     -
-      bundler_args:
+      bundler_args: 
       dist: trusty
-      env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_PUPPET_COLLECTION=puppet5 BEAKER_set=docker/centos-7
+      env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_PUPPET_COLLECTION=puppet6 BEAKER_set=docker/centos-7 BEAKER_TESTMODE=apply
+      rvm: 2.5.1
       script: bundle exec rake task_acceptance
       services: docker
       sudo: required
     -
-      bundler_args:
+      bundler_args: 
       dist: trusty
-      env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_PUPPET_COLLECTION=puppet5 BEAKER_set=docker/ubuntu-14.04
+      env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_PUPPET_COLLECTION=puppet6 BEAKER_set=docker/ubuntu-14.04 BEAKER_TESTMODE=apply
+      rvm: 2.5.1
       script: bundle exec rake task_acceptance
       services: docker
       sudo: required
@@ -29,4 +40,19 @@ matrix:
       env: CHECK=spec rubocop metadata_lint check:git_ignore check:dot_underscore check:test_file
     -
       env: CHECK=spec
-      rvm: 2.3
+branches:
+  only:
+    - master
+    - /^v\d/
+    - release
+notifications:
+  email: false
+deploy:
+  provider: puppetforge
+  user: puppet
+  password:
+    secure: ""
+  on:
+    tags: true
+    all_branches: true
+    condition: "$DEPLOY_TO_FORGE = yes"
