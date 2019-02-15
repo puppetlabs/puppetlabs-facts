@@ -26,7 +26,7 @@ describe 'facts task', if: fact('osfamily') == 'windows' do
 
   describe 'bash facts implementation', unless: fact_on(default, 'os.release.full') == '2008 R2' do
     it 'returns facts json' do
-      result = run_task('facts::powershell', 'default', config: config, inventory: inventory)
+      result = run_task('facts::powershell', 'default', {}, config: config, inventory: inventory)
       facts = result[0]['result']
       expect(facts).to include('os')
       expect(facts['os']). to include('family', 'name', 'release')

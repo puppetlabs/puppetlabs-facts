@@ -40,7 +40,7 @@ describe 'facts task' do
     end
 
     it 'returns facts json' do
-      result = run_task('facts::bash', 'default', config: config, inventory: inventory)
+      result = run_task('facts::bash', 'default', {}, config: config, inventory: inventory)
       facts = result[0]['result']
       expect(facts).to include('os')
       expect(facts['os']). to include('family', 'name', 'release')
