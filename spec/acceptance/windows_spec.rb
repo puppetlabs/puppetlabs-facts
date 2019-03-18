@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper_acceptance'
-require 'beaker-task_helper/inventory'
-require 'bolt_spec/run'
 
 describe 'facts task', if: fact('osfamily') == 'windows' do
   include Beaker::TaskHelper::Inventory

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'beaker-task_helper/inventory'
+require 'bolt_spec/run'
 require 'puppet'
 require 'beaker-rspec'
 require 'beaker/puppet_install_helper'
