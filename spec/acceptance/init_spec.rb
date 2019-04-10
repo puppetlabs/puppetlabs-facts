@@ -8,15 +8,11 @@ describe 'facts task', unless: fact_on(default, 'os.release.full') == '2008 R2' 
   include Beaker::TaskHelper::Inventory
   include BoltSpec::Run
 
-  def module_path
-    RSpec.configuration.module_path
+  def bolt_config
+    { 'modulepath' => RSpec.configuration.module_path }
   end
 
-  def config
-    { 'modulepath' => module_path }
-  end
-
-  def inventory
+  def bolt_inventory
     hosts_to_inventory.merge('features' => ['puppet-agent'])
   end
 
@@ -27,7 +23,7 @@ describe 'facts task', unless: fact_on(default, 'os.release.full') == '2008 R2' 
 
   describe 'puppet facts' do
     it 'includes legacy and structured facts' do
-      result = run_task('facts', 'default', {}, config: config, inventory: inventory)
+      result = run_task('facts', 'default', {})
       expect(result[0]['status']).to eq('success')
       facts = result[0]['result']
 

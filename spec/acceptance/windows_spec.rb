@@ -8,15 +8,11 @@ describe 'facts task', if: fact('osfamily') == 'windows' do
   include Beaker::TaskHelper::Inventory
   include BoltSpec::Run
 
-  def module_path
-    RSpec.configuration.module_path
+  def bolt_config
+    { 'modulepath' => RSpec.configuration.module_path }
   end
 
-  def config
-    { 'modulepath' => module_path }
-  end
-
-  def inventory
+  def bolt_inventory
     hosts_to_inventory
   end
 
@@ -26,7 +22,7 @@ describe 'facts task', if: fact('osfamily') == 'windows' do
 
   describe 'bash facts implementation', unless: fact_on(default, 'os.release.full') == '2008 R2' do
     it 'returns facts json' do
-      result = run_task('facts::powershell', 'default', {}, config: config, inventory: inventory)
+      result = run_task('facts::powershell', 'default', {})
       facts = result[0]['result']
       expect(facts).to include('os')
       expect(facts['os']). to include('family', 'name', 'release')
