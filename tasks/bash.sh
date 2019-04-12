@@ -39,7 +39,7 @@ if [ -z "${name}" ]; then
     if [ -e /etc/os-release ]; then
         name=$(grep "^NAME" /etc/os-release | cut -d'=' -f2 | sed "s/\"//g")
         release=$(grep "^VERSION_ID" /etc/os-release | cut -d'=' -f2 | sed "s/\"//g")
-    elif [-e /usr/lib/os-release ]; then
+    elif [ -e /usr/lib/os-release ]; then
         name=$(grep "^NAME" /usr/lib/os-release | cut -d'=' -f2 | sed "s/\"//g")
         release=$(grep "^VERSION_ID" /usr/lib/os-release | cut -d'=' -f2 | sed "s/\"//g")
     fi
