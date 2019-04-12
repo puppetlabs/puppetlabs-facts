@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.5.1
+### Fixed
+- Powershell implementation now correctly detects windows server 2019 and handles incompatible powershell version gracefully.
+- Typo in bash implementation causing script to crash when interrogating /usr/bin/os-release has been corrected.
+
 ## 0.5.0
 ### Changed
 - Extra implementations of the primary task will now be hidden in tools that support implementations and the 'private' property (like Bolt).
