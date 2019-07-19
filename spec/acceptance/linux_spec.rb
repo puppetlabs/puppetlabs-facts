@@ -15,7 +15,7 @@ describe 'facts task' do
   end
 
   os_family_fact = fact('osfamily')
-  platform = fact('os.name') == 'OracleLinux' ? 'RedHat' : fact('os.name')
+  platform = fact('os.name')
   release = fact('os.release.full')
 
   describe 'bash facts implementation', unless: fact_on(default, 'osfamily') == 'windows' do

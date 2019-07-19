@@ -12,7 +12,7 @@ fail() {
     error_data="{ \"msg\": \"Task error\", \"kind\": \"bash-error\", \"details\": {} }"
   fi
   echo "{ \"status\": \"failure\", \"_error\": $error_data }"
-  exit ${2:-1}
+  exit "${2:-1}"
 }
 
 validation_error() {
@@ -23,7 +23,6 @@ validation_error() {
 
 success() {
   echo "$1"
-  exit 0
 }
 
 # Get info from one of /etc/os-release or /usr/lib/os-release
@@ -32,19 +31,24 @@ _systemd() {
   # These files may have unquoted spaces in the "pretty" fields even if the spec says otherwise
   source <(sed 's/ /_/g' "$1")
 
-  if [[ ${ID_LIKE,,} =~ 'debian' ]]; then
-    family='Debian'
-  elif [[ ${ID_LIKE,,} =~ 'rhel' ]]; then
+  # According to `man os-release`, the first entry in ID_LIKE
+  # should be the one the platform most closely resembles
+  if [[ $ID = 'rhel' ]]; then
     family='RedHat'
+  elif [[ $ID = 'debian' ]]; then
+    family='Debian'
+  elif [[ $ID_LIKE ]]; then
+    family="${ID_LIKE%% *}"
   else
-    family="${ID^}"
+    family="${ID}"
   fi
 }
 
 # Get info from lsb_release
 _lsb_release() {
-  read -r ID < <(lsb_release -is)
-  read -r VERSION_ID < <(lsb_release -rs)
+  read -r ID < <(lsb_release -si)
+  read -r VERSION_ID < <(lsb_release -sr)
+  read -r VERSION_CODENAME < <(lsb_release -sc)
 }
 
 # Get info from rhel /etc/*-release files
@@ -54,28 +58,61 @@ _rhel() {
   ver_info=$(<"$1")
   # ID is the first word in the string
   ID="${ver_info%% *}"
+  # Codename is hopefully the word(s) in parenthesis
+  if echo "$ver_info" | grep -q '('; then
+    VERSION_CODENAME="${ver_info##*\(}"
+    VERSION_CODENAME=""${VERSION_CODENAME//[()]/}""
+  fi
 
   # Get a string like 'release 1.2.3' and grab everything after the space
-  release=$(grep -Eo 'release[[:space:]]*[0-9.]+' "$1")
+  release=$(echo "$ver_info" | grep -Eo 'release[[:space:]]*[0-9.]+')
   VERSION_ID="${release#* }"
 }
 
 # Last resort
 _uname() {
-  ID="$(uname)"
-  full="$(uname -r)"
+  [[ $ID ]] || ID="$(uname)"
+  [[ $full ]] || full="$(uname -r)"
 }
 
+# Taken from https://github.com/puppetlabs/facter/blob/master/lib/inc/facter/facts/os.hpp
+# If not in this list, we just uppercase the first character and lowercase the rest
 munge_name() {
-  if [[ ${!osmap[@]} =~ "${1,,}" ]]; then
-    echo "${osmap[${1,,}]}"
-  else
-    echo "${1^}"
-  fi
+  case "$1" in
+    redhat|rhel|red) echo "RedHat" ;;
+    ol|oracle) echo "OracleLinux" ;;
+    ubuntu) echo "Ubuntu" ;;
+    debian) echo "Debian" ;;
+    centos) echo "CentOS" ;;
+    cloud) echo "CloudLinux" ;;
+    virtuozzo) echo "VirtuozzoLinux" ;;
+    psbm) echo "PSBM" ;;
+    xenserver) echo "XenServer" ;;
+    linuxmint) echo "LinuxMint" ;;
+    sles) echo "SLES" ;;
+    suse) echo "SuSE" ;;
+    opensuse) echo "OpenSuSE" ;;
+    susos) echo "SunOS" ;;
+    omni) echo "OmniOS" ;;
+    openindiana) echo "OpenIndiana" ;;
+    manjaro) echo "ManjaroLinux" ;;
+    smart) echo "SmartOS" ;;
+    openwrt) echo "OpenWrt" ;;
+    meego) echo "MeeGo" ;;
+    coreos) echo "CoreOS" ;;
+    zen) echo "XCP" ;;
+    kfreebsd) echo "GNU/kFreeBSD" ;;
+    arista) echo "AristaEOS" ;;
+    huawei) echo "HuaweiOS" ;;
+    photon) echo "PhotonOS" ;;
+    *) echo "$(tr '[:lower:]' '[:upper:]' <<<"${ID:0:1}")""$(tr '[:upper:]' '[:lower:'] <<<"${ID:1}")"
+  esac
 }
 
 _tmp="$(mktemp)"
 exec 2>>"$_tmp"
+
+shopt -s nocasematch
 
 # Use indirection to munge PT_ environment variables
 # e.g. "$PT_version" becomes "$version"
@@ -83,26 +120,20 @@ for v in ${!PT_*}; do
   declare "${v#*PT_}"="${!v}"
 done
 
-# Set up an error trap and let any functions inhert it
-trap 'fail "Error getting system information"' ERR
-set -E
-
-# Taken from https://github.com/puppetlabs/facter/blob/master/lib/inc/facter/facts/os.hpp
-# If not in this list, we just uppercase the first character
-declare -A osmap=([redhat]=RedHat [rhel]=RedHat [centos]=CentOS [cloud]=CloudLinux [virtuozzo]=VirtuozzoLinux [psbm]=PSBM [ol]=OracleLinux [ovl]=OSV [oel]=OEL [xenserver]=XenServer [linuxmint]=LinuxMint [sles]=SLES [suse]=SuSE [opensuse]=OpenSuSE [sunos]=SunOS [omni]=OmniOS [openindiana]=OpenIndiana [manjaro]=ManjaroLinux [smart]=SmartOS [openwrt]=OpenWrt [meego]=MeeGo [coreos]=CoreOS [zen]=XCP [kfreebsd]='GNU/kFreeBSD' [arista]=AristaEOS [huawei]=HuaweiOS [photon]=PhotonOS)
-
 if [[ -e /etc/os-release ]]; then
   _systemd /etc/os-release
 elif [[ -e /usr/lib/os-release ]]; then
   _systemd /usr/lib/os-release
 fi
 
-# If either systemd is not installed or we didn't get a minor version from os-release
-if (( ${VERSION_ID%%.*} == ${VERSION_ID#*.} )); then
+# If either systemd is not installed or we didn't get a minor version or codename from os-release
+if ! [[ $VERSION_ID ]] || (( ${VERSION_ID%%.*} == ${VERSION_ID#*.} )) || ! [[ $VERSION_CODENAME ]]; then
   if [[ -e /etc/fedora-release ]]; then
     _rhel /etc/fedora-release
   elif [[ -e /etc/centos-release ]]; then
     _rhel /etc/centos-release
+  elif [[ -e /etc/oracle-release ]]; then
+    _rhel /etc/oracle-release
   elif [[ -e /etc/redhat-release ]]; then
     _rhel /etc/redhat-release
   elif type lsb_release &>/dev/null; then
@@ -124,14 +155,17 @@ family="$(munge_name "$family")"
 # We should change puppet_agent to not work this way
 if [[ $@ =~ 'platform' ]]; then
   success "$ID"
+  exit 0
 elif [[ $@ =~ 'release' ]]; then
   success "$full"
+  exit 0
 fi
 
 success "$(cat <<EOF
 {
   "os": {
-    "name": "${ID}",
+    "name": "$ID",
+    "codename": "$VERSION_CODENAME",
     "release": {
       "full": "$full",
       "major": "$major",
