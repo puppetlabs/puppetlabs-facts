@@ -92,7 +92,7 @@ munge_name() {
     sles) echo "SLES" ;;
     suse) echo "SuSE" ;;
     opensuse) echo "OpenSuSE" ;;
-    susos) echo "SunOS" ;;
+    sunos) echo "SunOS" ;;
     omni) echo "OmniOS" ;;
     openindiana) echo "OpenIndiana" ;;
     manjaro) echo "ManjaroLinux" ;;
