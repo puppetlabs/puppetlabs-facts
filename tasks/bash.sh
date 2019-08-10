@@ -165,13 +165,15 @@ success "$(cat <<EOF
 {
   "os": {
     "name": "$ID",
-    "codename": "$VERSION_CODENAME",
+    "distro": {
+      "codename": "$VERSION_CODENAME"
+    },
     "release": {
       "full": "$full",
       "major": "$major",
       "minor": "$minor"
     },
-    "family": "${family}"
+    "family": "$family"
   }
 }
 EOF
