@@ -61,7 +61,7 @@ _rhel() {
   # Codename is hopefully the word(s) in parenthesis
   if echo "$ver_info" | grep -q '('; then
     VERSION_CODENAME="${ver_info##*\(}"
-    VERSION_CODENAME=""${VERSION_CODENAME//[()]/}""
+    VERSION_CODENAME="${VERSION_CODENAME//[()\ ]/}"
   fi
 
   # Get a string like 'release 1.2.3' and grab everything after the space
