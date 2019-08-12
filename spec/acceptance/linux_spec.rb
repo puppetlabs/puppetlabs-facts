@@ -36,8 +36,9 @@ describe 'facts task' do
     it 'returns facts json' do
       result = run_task('facts::bash', 'default', {})
       facts = result[0]['result']
+      expect(facts['os']['distro']).to include('codename')
       expect(facts).to include('os')
-      expect(facts['os']). to include('family', 'name', 'release')
+      expect(facts['os']).to include('family', 'name', 'release')
       expect(facts['os']['family']).to match(/#{os_family_fact}/)
       expect(facts['os']['name']).to match(/#{platform}/)
       expect(release).to match(/#{facts['os']['release']['full']}/)

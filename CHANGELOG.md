@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.6.0
+### Added
+- The `bash.sh` implementation can now provide distro code-name when possible.
+
 ## 0.5.1
 ### Fixed
 - Powershell implementation now correctly detects windows server 2019 and handles incompatible powershell version gracefully.
