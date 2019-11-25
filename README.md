@@ -9,12 +9,12 @@
 
 ## Description
 
-This module provides a collection of facts tasks and plans all of which retrieve facts from the specified nodes but each of them processes the retrieved facts differently. The provided plans are:
-* `facts` - retrieves the facts and then stores them in the inventory, returns a result set wrapping result objects for each specified node which in turn wrap the retrieved facts
-* `facts::info` - retrieves the facts and returns information about each node's OS compiled from the `os` fact value retrieved from that node
+This module provides a collection of facts tasks and plans all of which retrieve facts from the specified targets but each of them processes the retrieved facts differently. The provided plans are:
+* `facts` - retrieves the facts and then stores them in the inventory, returns a result set wrapping result objects for each specified target which in turn wrap the retrieved facts
+* `facts::info` - retrieves the facts and returns information about each target's OS compiled from the `os` fact value retrieved from that target
 
 The provided tasks:
-* `facts` - retrieves the facts and without further processing returns a result set wrapping result objects for each specified node which in turn wrap the retrieved facts (this task is used by the above plans). This task relies on cross-platform task support; if unavailable, the individual implementations can be used instead.
+* `facts` - retrieves the facts and without further processing returns a result set wrapping result objects for each specified target which in turn wrap the retrieved facts (this task is used by the above plans). This task relies on cross-platform task support; if unavailable, the individual implementations can be used instead.
 * `facts::bash` - bash implementation of fact gathering, used by the `facts` task.
 * `facts::powershell` - powershell implementation of fact gathering, used by the `facts` task.
 * `facts::ruby` - ruby implementation of fact gathering, used by the `facts` task.
@@ -51,14 +51,14 @@ This module is compatible with the version of Puppet Bolt it ships with.
 To run the facts plan run
 
 ```
-bolt plan run facts --nodes node1.example.com,node2.example.com
+bolt plan run facts --targets target1.example.com,target2.example.com
 ```
 
 ### Parameters
 
 All plans have only one parameter:
 
-* **nodes** - The nodes to retrieve the facts from.
+* `targets` - The targets to retrieve the facts from.
 
 ## Reference
 

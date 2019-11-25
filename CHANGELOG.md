@@ -1,6 +1,9 @@
 # Change Log
 
 ## 0.6.1
+### Changed
+- The `$nodes` parameter was changed to `$targets` in both the `facts` and `facts::info` plans.
+
 ### Fixed
 - Bash implementation now correctly detects platform information when using bash 3.1 and 3.2.
 
