@@ -35,7 +35,7 @@ describe 'facts' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 nodes")
+      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 target")
     end
   end
 
@@ -53,7 +53,7 @@ describe 'facts' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 nodes")
+      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 target")
     end
   end
 
@@ -71,7 +71,7 @@ describe 'facts' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 nodes")
+      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 target")
     end
   end
 
@@ -89,7 +89,7 @@ describe 'facts' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 nodes")
+      expect(run_plan('facts', 'nodes' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 target")
     end
   end
 
@@ -114,7 +114,7 @@ describe 'facts' do
       expect_task('facts').return_for_targets(target_results)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'nodes' => nodes).value.msg).to eq("Plan aborted: run_task 'facts' failed on 3 nodes")
+      expect(run_plan('facts', 'nodes' => nodes).value.msg).to eq("Plan aborted: run_task 'facts' failed on 3 targets")
     end
   end
 end
