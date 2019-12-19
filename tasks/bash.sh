@@ -29,7 +29,8 @@ success() {
 # This is the preferred method and is checked first
 _systemd() {
   # These files may have unquoted spaces in the "pretty" fields even if the spec says otherwise
-  source <(sed 's/ /_/g' "$1")
+  # source cannot use process subsitution in some versions of bash, so redirect to stdin instead
+  source /dev/stdin <<<"$(sed 's/ /_/g' "$1")"
 
   # According to `man os-release`, the first entry in ID_LIKE
   # should be the one the platform most closely resembles

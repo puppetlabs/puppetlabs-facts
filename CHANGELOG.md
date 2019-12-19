@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.6.1
+### Fixed
+- Bash implementation now correctly detects platform information when using bash 3.1 and 3.2.
+
 ## 0.6.0
 ### Added
 - The `bash.sh` implementation can now provide distro code-name when possible.
