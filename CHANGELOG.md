@@ -3,6 +3,7 @@
 ## 0.6.1
 ### Fixed
 - Bash implementation now correctly detects platform information when using bash 3.1 and 3.2.
+- Bash implementation now correctly returns the platform version when using `uname` to determine the platform name and version.
 
 ## 0.6.0
 ### Added
