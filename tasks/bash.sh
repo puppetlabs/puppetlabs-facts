@@ -73,7 +73,7 @@ _rhel() {
 # Last resort
 _uname() {
   [[ $ID ]] || ID="$(uname)"
-  [[ $full ]] || full="$(uname -r)"
+  [[ $VERSION_ID ]] || VERSION_ID="$(uname -r)"
 }
 
 # Taken from https://github.com/puppetlabs/facter/blob/master/lib/inc/facter/facts/os.hpp
