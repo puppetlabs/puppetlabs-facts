@@ -28,8 +28,10 @@ success() {
 maybe_delegate_to_facter() {
   export PATH=$PATH:/opt/puppetlabs/bin
 
-  # Only use facter if we're not looking up a specific fact (from the puppet-agent task)
-  if [ "x$1" == "x" ] && command -v facter > /dev/null 2>&1; then
+  # Only use facter if we're running as the "facts" task, not the "facts::bash"
+  # task. This also skips calling facter if we're running as a script, which is
+  # used by the puppet_agent task.
+  if [ "x$PT__task" == "xfacts" ] && command -v facter > /dev/null 2>&1; then
     # Include the --show-legacy flag for Facter 3+
     facter_version="$(facter -v)"
     version_regex='^[0-2]'

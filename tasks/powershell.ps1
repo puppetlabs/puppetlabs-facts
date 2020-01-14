@@ -17,7 +17,7 @@ function ErroMessage {
 # Server Core.
 if ([System.Environment]::OSVersion.Platform -gt 2) {
     ErroMessage
-} elseif (Get-Command facter -ErrorAction SilentlyContinue) {
+} elseif ($env:PT__task -eq 'facts' -and (Get-Command facter -ErrorAction SilentlyContinue)) {
   $version = facter -v | Out-String
   if ($version -match '^[0-2]') {
     facter -p --json
