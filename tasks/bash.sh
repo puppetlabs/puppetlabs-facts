@@ -26,20 +26,17 @@ success() {
 }
 
 maybe_delegate_to_facter() {
-  export PATH=$PATH:/opt/puppetlabs/bin
+  [[ $PATH =~ \/opt\/puppetlabs\/bin ]] || export PATH="${PATH}:/opt/puppetlabs/bin"
 
   # Only use facter if we're running as the "facts" task, not the "facts::bash"
   # task. This also skips calling facter if we're running as a script, which is
   # used by the puppet_agent task.
-  if [ "x$PT__task" == "xfacts" ] && command -v facter > /dev/null 2>&1; then
+  if [[ $PT__task == facts ]] && type facter &>/dev/null; then
     # Include the --show-legacy flag for Facter 3+
     facter_version="$(facter -v)"
-    version_regex='^[0-2]'
-    if [[ $facter_version =~ $version_regex ]]; then
-      exec facter -p --json
-    else
-      exec facter -p --json --show-legacy
-    fi
+    (( ${facter_version%%.*} >= 3 )) && facter_args=(--show-legacy)
+
+    exec facter -p --json "${facter_args[@]}"
   fi
 }
 
@@ -141,7 +138,7 @@ done
 
 # Delegate to facter executable if it exists. This function will `exec` and not
 # return if facter exists. Otherwise, we'll continue on.
-maybe_delegate_to_facter $@
+maybe_delegate_to_facter "$@"
 
 if [[ -e /etc/os-release ]]; then
   _systemd /etc/os-release
