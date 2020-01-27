@@ -17,6 +17,13 @@ function ErroMessage {
 # Server Core.
 if ([System.Environment]::OSVersion.Platform -gt 2) {
     ErroMessage
+} elseif ($env:PT__task -eq 'facts' -and (Get-Command facter -ErrorAction SilentlyContinue)) {
+  $version = facter -v | Out-String
+  if ($version -match '^[0-2]') {
+    facter -p --json
+  } else {
+    facter -p --json --show-legacy
+  }
 } else {
     $release = [System.Environment]::OSVersion.Version.ToString() -replace '\.[^.]*\z'
     $version = $release -replace '\.[^.]*\z'
