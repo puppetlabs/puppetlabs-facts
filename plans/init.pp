@@ -1,9 +1,9 @@
 # A plan that retrieves facts and stores in the inventory for the
-# specified nodes.
+# specified targets.
 #
-# The $nodes parameter is a list of nodes to retrieve the facts for.
-plan facts(TargetSpec $nodes) {
-  $result_set = run_task('facts', $nodes)
+# The $targets parameter is a list of targets to retrieve the facts for.
+plan facts(TargetSpec $targets) {
+  $result_set = run_task('facts', $targets)
 
   $result_set.each |$result| {
     add_facts($result.target, $result.value)
