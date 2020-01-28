@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.6.1
+## 1.0.0
 ### Changed
 - The `$nodes` parameter was changed to `$targets` in both the `facts` and `facts::info` plans.
 
