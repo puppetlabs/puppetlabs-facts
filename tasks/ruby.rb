@@ -1,46 +1,33 @@
 #!/opt/puppetlabs/puppet/bin/ruby
 # frozen_string_literal: true
 require 'open3'
+require_relative "../../ruby_task_helper/files/task_helper.rb"
 
-def facter_executable
-  if Gem.win_platform?
-    require 'win32/registry'
-    installed_dir =
-      begin
-        Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Puppet Labs\Puppet') do |reg|
-          # rubocop:disable Style/RescueModifier
-          # Rescue missing key
-          dir = reg['RememberedInstallDir64'] rescue ''
-          # Both keys may exist, make sure the dir exists
-          break dir if File.exist?(dir)
+class Facts < TaskHelper
+  def facter_executable
+    install_path = File.join(File.dirname(RbConfig.ruby), 'facter')
 
-          # Rescue missing key
-          reg['RememberedInstallDir'] rescue ''
-          # rubocop:enable Style/RescueModifier
-        end
-      rescue Win32::Registry::Error
-        # Rescue missing registry path
-        ''
-      end
-
-    facter =
-      if installed_dir.empty?
-        ''
-      else
-        File.join(installed_dir, 'bin', 'facter')
-      end
-  else
-    facter = '/opt/puppetlabs/puppet/bin/facter'
+    # Fall back to PATH lookup if puppet-agent isn't installed
+    if File.exist?(install_path)
+      # Paths with spaces must be quoted on Windows, which means slashes need escaping
+      Gem.win_platform? ? "\"#{install_path}\"" : install_path
+    else
+      'facter'
+    end
   end
 
-  # Fall back to PATH lookup if puppet-agent isn't installed
-  File.exist?(facter) ? facter : 'facter'
+  def task(opts = {})
+    # Delegate to facter
+    stdout, stderr, status = Open3.capture3("#{facter_executable} -v")
+
+    if stdout =~ /^[0-2]\./
+      exec("#{facter_executable} -p --json")
+    else
+      exec("#{facter_executable} -p --json --show-legacy")
+    end
+  end
 end
 
-# Delegate to facter
-stdout, _stderr, _status = Open3.capture3("#{facter_executable} -v")
-if stdout =~ /^[0-2]\./
-  exec(facter_executable, '-p', '--json')
-else
-  exec(facter_executable, '-p', '--json', '--show-legacy')
+if __FILE__ == $0
+  Facts.run
 end
