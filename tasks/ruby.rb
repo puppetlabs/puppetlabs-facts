@@ -5,15 +5,22 @@ require_relative "../../ruby_task_helper/files/task_helper.rb"
 
 class Facts < TaskHelper
   def facter_executable
-    install_path = File.join(File.dirname(RbConfig.ruby), 'facter')
+    exe_path = File.join(File.dirname(RbConfig.ruby), 'facter.exe')
+    bat_path = File.join(File.dirname(RbConfig.ruby), 'facter.bat')
+    ruby_path = File.join(File.dirname(RbConfig.ruby), 'facter')
 
-    # Fall back to PATH lookup if puppet-agent isn't installed
-    if File.exist?(install_path)
-      # Paths with spaces must be quoted on Windows, which means slashes need escaping
-      Gem.win_platform? ? "\"#{install_path}\"" : install_path
-    else
-      'facter'
+    if Gem.win_platform?
+      if File.exist?(exe_path)
+        return "\"#{exe_path}\""
+      elsif File.exist?(bat_path)
+        return "\"#{bat_path}\""
+      end
+    elsif File.exist?(ruby_path)
+      return ruby_path
     end
+
+    # Fall back to PATH lookup if known path does not exist
+    'facter'
   end
 
   def task(opts = {})
