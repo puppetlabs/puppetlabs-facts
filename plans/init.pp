@@ -1,7 +1,9 @@
-# A plan that retrieves facts and stores in the inventory for the
-# specified targets.
+# @summary
+#  A plan that retrieves facts and stores in the inventory for the
+#  specified targets.
 #
-# The $targets parameter is a list of targets to retrieve the facts for.
+# @param targets List of targets to retrieve the facts for.
+# @return ResultSet of Task results.
 plan facts(TargetSpec $targets) {
   $result_set = run_task('facts', $targets)
 
