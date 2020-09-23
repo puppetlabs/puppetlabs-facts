@@ -28,10 +28,20 @@ class Facts < TaskHelper
     stdout, stderr, status = Open3.capture3("#{facter_executable} -v")
 
     if stdout =~ /^[0-2]\./
-      exec("#{facter_executable} -p --json")
+      facter_args = "-p --json"
     else
-      exec("#{facter_executable} -p --json --show-legacy")
+      facter_args = "-p --json --show-legacy"
     end
+
+    stdout, stderr, status = Open3.capture3("#{facter_executable} #{facter_args}")
+
+    result = JSON.parse(stdout)
+
+    if status.exitstatus != 0
+      result[:_error] = { msg: stderr }
+    end
+
+    return result
   end
 end
 
