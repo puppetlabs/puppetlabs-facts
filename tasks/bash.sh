@@ -25,6 +25,18 @@ success() {
   echo "$1"
 }
 
+determine_command_for_facter_4() {
+  puppet_version="$(puppet --version)"
+
+  if [[ puppet_version =~ [^6\.] ]]; then
+    # puppet 6 with facter 4
+    facts_command="facter --json --show-legacy"
+  else
+    # puppet 7 with facter 4
+    facts_command="puppet facts show --show-legacy"
+  fi
+}
+
 maybe_delegate_to_facter() {
   [[ $PATH =~ \/opt\/puppetlabs\/bin ]] || export PATH="${PATH}:/opt/puppetlabs/bin"
 
@@ -32,11 +44,18 @@ maybe_delegate_to_facter() {
   # task. This also skips calling facter if we're running as a script, which is
   # used by the puppet_agent task.
   if [[ $PT__task == facts ]] && type facter &>/dev/null; then
-    # Include the --show-legacy flag for Facter 3+
     facter_version="$(facter -v)"
-    (( ${facter_version%%.*} >= 3 )) && facter_args=(--show-legacy)
 
-    exec facter -p --json "${facter_args[@]}"
+    if (( ${facter_version%%.*} <= 2 )); then
+      facts_command='facter -p --json'
+    elif (( ${facter_version%%.*} == 3 )); then
+      facts_command='facter -p --json --show-legacy'
+    else
+      # facter 4
+      determine_command_for_facter_4
+    fi
+
+    exec $facts_command
   fi
 }
 
