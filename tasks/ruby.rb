@@ -5,16 +5,16 @@ require_relative "../../ruby_task_helper/files/task_helper.rb"
 
 class Facts < TaskHelper
   def task(opts = {})
-    facter_version = component_version(:facter)
+    facter_executable = executable(:facter)
+    facter_version = component_version(facter_executable)
 
     facts_command = if facter_version =~ /^[0-2]\./
-                      "#{executable(:facter)} -p --json"
+                      "#{facter_executable} -p --json"
                     elsif facter_version =~/^3\./
-                      "#{executable(:facter)} -p --json --show-legacy"
+                      "#{facter_executable} -p --json --show-legacy"
                     else
                       # facter 4
-                      puppet_version = component_version(:puppet)
-                      determine_command_for_facter_4(puppet_version)
+                      determine_command_for_facter_4(facter_executable)
                     end
 
     stdout, stderr, status = Open3.capture3("#{facts_command}")
@@ -51,19 +51,21 @@ class Facts < TaskHelper
     type
   end
 
-  def determine_command_for_facter_4(puppet_version)
+  def determine_command_for_facter_4(facter_executable)
+    puppet_executable = executable(:puppet)
+    puppet_version = component_version(puppet_executable)
+
     if puppet_version =~ /^6\./
       # puppet 6 with facter 4
-      "facter --json --show-legacy"
+      "#{facter_executable} --json --show-legacy"
     else
       # puppet 7 with facter 4
-      "puppet facts show --show-legacy"
+      "#{puppet_executable} facts show --show-legacy --render-as json"
     end
   end
 
-  def component_version(component)
-    component = component.to_s
-    stdout, _stderr, _status = Open3.capture3("#{executable(component)} --version")
+  def component_version(exec)
+    stdout, _stderr, _status = Open3.capture3("#{exec} --version")
 
     stdout.strip
   end

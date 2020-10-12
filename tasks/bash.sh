@@ -28,12 +28,12 @@ success() {
 determine_command_for_facter_4() {
   puppet_version="$(puppet --version)"
 
-  if [[ puppet_version =~ [^6\.] ]]; then
+  if (( ${puppet_version%%.*} == 6 )); then
     # puppet 6 with facter 4
-    facts_command="facter --json --show-legacy"
+    facts_command=(facter --json --show-legacy)
   else
     # puppet 7 with facter 4
-    facts_command="puppet facts show --show-legacy"
+    facts_command=(puppet facts show --show-legacy --render-as json)
   fi
 }
 
@@ -47,15 +47,15 @@ maybe_delegate_to_facter() {
     facter_version="$(facter -v)"
 
     if (( ${facter_version%%.*} <= 2 )); then
-      facts_command='facter -p --json'
+      facts_command=(facter -p --json)
     elif (( ${facter_version%%.*} == 3 )); then
-      facts_command='facter -p --json --show-legacy'
+      facts_command=(facter -p --json --show-legacy)
     else
       # facter 4
       determine_command_for_facter_4
     fi
 
-    exec $facts_command
+    exec -- "${facts_command[@]}"
   fi
 }
 
