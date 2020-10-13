@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.1.0
+### Added
+- The prototype `facts::external` plan can be used to gather external facts based on a provided modulepath.
+
+### Changed
+- The Powershell implementation now searches for `facter.exe` on Windows platforms.
+
+### Fixed
+- The `facts` task now correctly outputs errors.
+
 ## 1.0.0
 ### Changed
 - The `$nodes` parameter was changed to `$targets` in both the `facts` and `facts::info` plans.
