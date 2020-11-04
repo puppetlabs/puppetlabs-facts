@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.2.0
+### Changed
+- Replace `facter -p` with `puppet facts show` for Puppet 7.
+
 ## 1.1.0
 ### Added
 - The prototype `facts::external` plan can be used to gather external facts based on a provided modulepath.
