@@ -18,11 +18,20 @@ function ErroMessage {
 if ([System.Environment]::OSVersion.Platform -gt 2) {
     ErroMessage
 } elseif ($env:PT__task -eq 'facts' -and (Get-Command facter -ErrorAction SilentlyContinue)) {
-  $version = facter -v | Out-String
-  if ($version -match '^[0-2]') {
+  $facter_version = facter -v | Out-String
+  if ($facter_version -match '^[0-2]') {
     facter -p --json
-  } else {
+  } elseif ($facter_version -match '^3') {
     facter -p --json --show-legacy
+  } else {
+    $puppet_version = puppet --version | Out-String
+    if ($puppet_version -match '^6') {
+      # puppet 6 with facter 4
+      facter --json --show-legacy
+    } else {
+      # puppet 7 with facter 4
+      puppet facts show --show-legacy --render-as json
+    }
   }
 } else {
     $release = [System.Environment]::OSVersion.Version.ToString() -replace '\.[^.]*\z'
