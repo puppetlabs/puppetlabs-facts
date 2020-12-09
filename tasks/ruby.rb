@@ -38,10 +38,10 @@ class Facts < TaskHelper
     ruby_path = File.join(File.dirname(RbConfig.ruby), type)
 
     if Gem.win_platform?
-      if File.exist?(exe_path)
-        return "\"#{exe_path}\""
-      elsif File.exist?(bat_path)
+      if File.exist?(bat_path)
         return "\"#{bat_path}\""
+      elsif File.exist?(exe_path)
+        return "\"#{exe_path}\""
       end
     elsif File.exist?(ruby_path)
       return ruby_path
