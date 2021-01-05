@@ -1,11 +1,22 @@
 {
   "description": "Gather system facts",
   "parameters": {},
-  "input_method": "both",
-  "files": ["ruby_task_helper/files/task_helper.rb"],
   "implementations": [
-    {"name": "ruby.rb", "requirements": ["puppet-agent"]},
-    {"name": "powershell.ps1", "requirements": ["powershell"]},
-    {"name": "bash.sh", "requirements": ["shell"]}
+    { 
+      "name": "ruby.rb",
+      "requirements": ["puppet-agent"],
+      "files": ["ruby_task_helper/files/task_helper.rb"],
+      "input_method": "stdin"
+    },
+    {
+      "name": "powershell.ps1",
+      "requirements": ["powershell"],
+      "input_method": "environment"
+    },
+    { 
+      "name": "bash.sh",
+      "requirements": ["shell"],
+      "input_method": "environment"
+    }
   ]
 }
