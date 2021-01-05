@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.3.0
+### Changed
+- Look for and prefer `.bat` executables for windows platforms in the ruby implementation.
+- Update task metadata to explicitly define file requirements and input_method.
+
 ## 1.2.0
 ### Changed
 - Replace `facter -p` with `puppet facts show` for Puppet 7.
