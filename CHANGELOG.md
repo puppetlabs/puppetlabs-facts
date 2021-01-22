@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.4.0
+### Changed
+- Bump maximum Puppet version to include 7.x
+
 ## 1.3.0
 ### Changed
 - Look for and prefer `.bat` executables for windows platforms in the ruby implementation.
