@@ -140,6 +140,7 @@ munge_name() {
     arista) echo "AristaEOS" ;;
     huawei) echo "HuaweiOS" ;;
     photon) echo "PhotonOS" ;;
+    freebsd) echo "FreeBSD" ;;
     *) echo "$(tr '[:lower:]' '[:upper:]' <<<"${ID:0:1}")""$(tr '[:upper:]' '[:lower:'] <<<"${ID:1}")"
   esac
 }
