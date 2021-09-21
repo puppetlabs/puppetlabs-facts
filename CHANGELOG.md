@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.5.0
+### Changed
+- The `os` fact now correctly capitalizes freebsd to FreeBSD for the fact ID and `family` keys.
+
 ## 1.4.0
 ### Changed
 - Bump maximum Puppet version to include 7.x
