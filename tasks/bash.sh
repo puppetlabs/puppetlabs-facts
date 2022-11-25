@@ -90,17 +90,26 @@ _lsb_release() {
 _rhel() {
   family='RedHat'
   # slurp the file
-  ver_info=$(<"$1")
+  ver_info=$(head -n 1 "$1")
   # ID is the first word in the string
   ID="${ver_info%% *}"
   # Codename is hopefully the word(s) in parenthesis
   if echo "$ver_info" | grep -q '('; then
     VERSION_CODENAME="${ver_info##*\(}"
     VERSION_CODENAME=""${VERSION_CODENAME//[()]/}""
+  else
+    # Fallback to some basic matching
+    if echo "$ver_info" | grep -q '^VMware .* OS'; then
+      VERSION_CODENAME=$(echo "$ver_info" | cut -d' ' -f2)
+    fi
   fi
 
   # Get a string like 'release 1.2.3' and grab everything after the space
   release=$(echo "$ver_info" | grep -Eo 'release[[:space:]]*[0-9.]+')
+  if [[ -z "$release" ]]; then
+    # Second try: anything that looks-like a vernion number at the end of the line
+    release=$(echo "$ver_info" | grep -Eo '[0-9.]+$')
+  fi
   VERSION_ID="${release#* }"
 }
 
@@ -140,6 +149,7 @@ munge_name() {
     arista) echo "AristaEOS" ;;
     huawei) echo "HuaweiOS" ;;
     photon) echo "PhotonOS" ;;
+    vmware) echo "VMware" ;;
     freebsd) echo "FreeBSD" ;;
     *) echo "$(tr '[:lower:]' '[:upper:]' <<<"${ID:0:1}")""$(tr '[:upper:]' '[:lower:'] <<<"${ID:1}")"
   esac
@@ -176,6 +186,8 @@ if ! [[ $VERSION_ID ]] || (( ${VERSION_ID%%.*} == ${VERSION_ID#*.} )) || ! [[ $V
     _rhel /etc/oracle-release
   elif [[ -e /etc/redhat-release ]]; then
     _rhel /etc/redhat-release
+  elif [[ -e /etc/photon-release ]]; then
+    _rhel /etc/photon-release
   elif type lsb_release &>/dev/null; then
     _lsb_release
   else
