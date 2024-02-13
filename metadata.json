@@ -49,11 +49,11 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 5.1.0 < 8.0.0"
+      "version_requirement": ">= 5.1.0 < 9.0.0"
     }
   ],
   "description": "Tasks that inspect the value of system facts",
-  "pdk-version": "1.8.0",
-  "template-url": "https://github.com/puppetlabs/pdk-templates",
-  "template-ref": "heads/master-0-g3978a9c"
+  "pdk-version": "3.0.1",
+  "template-url": "https://github.com/puppetlabs/pdk-templates#3.0.1",
+  "template-ref": "tags/3.0.1-0-gd13288a"
 }
