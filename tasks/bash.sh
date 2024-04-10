@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # This script may be called outside of a task, e.g. by puppet_agent
 # so we have to just paste this code here.  *grumbles*
 # Exit with an error message and error code, defaulting to 1
