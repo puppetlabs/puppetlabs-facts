@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.6.0
+### Changed
+- Updated the puppet agent compatibility to >=7.0.0 <9.0.0.
+
 ## 1.5.0
 ### Changed
 - The `os` fact now correctly capitalizes freebsd to FreeBSD for the fact ID and `family` keys.
