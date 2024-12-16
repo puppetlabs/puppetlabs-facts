@@ -24,13 +24,13 @@ describe 'facts task' do
     it 'returns platform when invoked with platform parameter' do
       result = run_script(script, 'default', ['platform'])
       expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['stdout']).to match(/#{platform}/)
+      expect(result[0]['result']['stdout']).to match(%r{#{platform}})
     end
 
     it 'returns release when invoked with release parameter' do
       result = run_script(script, 'default', ['release'])
       expect(result[0]['status']).to eq('success')
-      expect(release).to match(/#{result[0]['result']['stdout'].strip}/)
+      expect(release).to match(%r{#{result[0]['result']['stdout'].strip}})
     end
 
     it 'returns facts json' do
@@ -39,9 +39,9 @@ describe 'facts task' do
       expect(facts['os']['distro']).to include('codename')
       expect(facts).to include('os')
       expect(facts['os']).to include('family', 'name', 'release')
-      expect(facts['os']['family']).to match(/#{os_family_fact}/)
-      expect(facts['os']['name']).to match(/#{platform}/)
-      expect(release).to match(/#{facts['os']['release']['full']}/)
+      expect(facts['os']['family']).to match(%r{#{os_family_fact}})
+      expect(facts['os']['name']).to match(%r{#{platform}})
+      expect(release).to match(%r{#{facts['os']['release']['full']}})
     end
   end
 end

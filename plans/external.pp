@@ -28,22 +28,22 @@ plan facts::external(
       # If parsing as YAML or JSON failed, the error will be a string and we
       # should try to parse the original facts as key-value pairs
       if type($jsonoryaml, 'generalized') == String {
-          $fact_kv_strings = $raw_facts.split(/\n/)
-          $fact_kvs = $fact_kv_strings.map |$str| {
-            $match = $str.match(/^([^=]+)=(.+)$/)
-            if $match {
-                $key = $match[1]
-                $value = $match[2]
-            } else {
-              $msg = @("MSG"/L)
+        $fact_kv_strings = $raw_facts.split(/\n/)
+        $fact_kvs = $fact_kv_strings.map |$str| {
+          $match = $str.match(/^([^=]+)=(.+)$/)
+          if $match {
+            $key = $match[1]
+            $value = $match[2]
+          } else {
+            $msg = @("MSG"/L)
               External fact output must have key-value pairs separated by an '=' on each line, like so:
               key=value
               key2=value2
               | MSG
-              fail_plan($msg)
-            }
-            [$key, $value]
+            fail_plan($msg)
           }
+          [$key, $value]
+        }
         $facts_for_target = Hash.new($fact_kvs.flatten)
         add_facts($target, $facts_for_target)
       } else {

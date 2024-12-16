@@ -94,7 +94,7 @@ describe 'facts' do
   end
 
   context 'ssh, winrm, and pcp targets' do
-    let(:nodes) { %w[ssh://host1 winrm://host2 pcp://host3] }
+    let(:nodes) { ['ssh://host1', 'winrm://host2', 'pcp://host3'] }
 
     it 'contains OS information for target' do
       target_results = nodes.each_with_object({}) { |node, h| h[node] = fact_output(node) }
@@ -104,7 +104,7 @@ describe 'facts' do
       end
 
       result_set = Bolt::ResultSet.new(
-        nodes.map { |node| Bolt::Result.new(Bolt::Target.new(node), value: fact_output(node)) }
+        nodes.map { |node| Bolt::Result.new(Bolt::Target.new(node), value: fact_output(node)) },
       )
       expect(run_plan('facts', 'targets' => nodes).value).to eq(result_set)
     end

@@ -1,16 +1,17 @@
 #!/opt/puppetlabs/puppet/bin/ruby
 # frozen_string_literal: true
+
 require 'open3'
-require_relative "../../ruby_task_helper/files/task_helper.rb"
+require_relative '../../ruby_task_helper/files/task_helper.rb'
 
 class Facts < TaskHelper
-  def task(opts = {})
+  def task(_opts = {})
     facter_executable = executable(:facter)
     facter_version = component_version(facter_executable)
 
-    facts_command = if facter_version =~ /^[0-2]\./
+    facts_command = if %r{^[0-2]\.}.match?(facter_version)
                       "#{facter_executable} -p --json"
-                    elsif facter_version =~/^3\./
+                    elsif %r{^3\.}.match?(facter_version)
                       "#{facter_executable} -p --json --show-legacy"
                     else
                       # facter 4
@@ -55,7 +56,7 @@ class Facts < TaskHelper
     puppet_executable = executable(:puppet)
     puppet_version = component_version(puppet_executable)
 
-    if puppet_version =~ /^6\./
+    if %r{^6\.}.match?(puppet_version)
       # puppet 6 with facter 4
       "#{facter_executable} --json --show-legacy"
     else
