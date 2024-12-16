@@ -18,7 +18,7 @@ class Facts < TaskHelper
                       determine_command_for_facter_4(facter_executable)
                     end
 
-    stdout, stderr, status = Open3.capture3("#{facts_command}")
+    stdout, stderr, status = Open3.capture3(facts_command.to_s)
 
     result = JSON.parse(stdout)
 
@@ -72,6 +72,6 @@ class Facts < TaskHelper
   end
 end
 
-if __FILE__ == $0
+if __FILE__ == $PROGRAM_NAME
   Facts.run
 end
