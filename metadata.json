@@ -53,7 +53,7 @@
     }
   ],
   "description": "Tasks that inspect the value of system facts",
-  "pdk-version": "1.8.0",
-  "template-url": "https://github.com/puppetlabs/pdk-templates",
-  "template-ref": "heads/master-0-g3978a9c"
+  "pdk-version": "3.3.0",
+  "template-url": "https://github.com/puppetlabs/pdk-templates#main",
+  "template-ref": "heads/main-0-ge639470"
 }
