@@ -16,7 +16,6 @@ describe 'facts task', unless: fact_on(default, 'os.release.full') == '2008 R2' 
 
   operating_system_fact = fact('operatingsystem')
   os_family_fact = fact('osfamily')
-  platform = fact('os.name')
   release = fact('os.release.full')
 
   describe 'puppet facts' do

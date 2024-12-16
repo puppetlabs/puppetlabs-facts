@@ -4,6 +4,7 @@
 require 'open3'
 require_relative '../../ruby_task_helper/files/task_helper.rb'
 
+# Retrieve facts from the system
 class Facts < TaskHelper
   def task(_opts = {})
     facter_executable = executable(:facter)
