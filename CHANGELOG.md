@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.7.0
+### Changed
+- Puppet 8 compatibility update, including `PDK update`.
+
+### Fixed
+- Bugfixed broken testing suite.
+
 ## 1.6.0
 ### Changed
 - Updated the puppet agent compatibility to >=7.0.0 <9.0.0.
