@@ -10,9 +10,7 @@ class Facts < TaskHelper
     facter_executable = executable(:facter)
     facter_version = component_version(facter_executable)
 
-    facts_command = if %r{^[0-2]\.}.match?(facter_version)
-                      "#{facter_executable} -p --json"
-                    elsif %r{^3\.}.match?(facter_version)
+    facts_command = if %r{^3\.}.match?(facter_version)
                       "#{facter_executable} -p --json --show-legacy"
                     else
                       # facter 4
@@ -56,14 +54,9 @@ class Facts < TaskHelper
   def determine_command_for_facter_4(facter_executable)
     puppet_executable = executable(:puppet)
     puppet_version = component_version(puppet_executable)
-
-    if %r{^6\.}.match?(puppet_version)
-      # puppet 6 with facter 4
-      "#{facter_executable} --json --show-legacy"
-    else
-      # puppet 7 with facter 4
-      "#{puppet_executable} facts show --show-legacy --render-as json"
-    end
+    # puppet 7 with facter 4
+    "#{puppet_executable} facts show --show-legacy --render-as json"
+    
   end
 
   def component_version(exec)
