@@ -1,23 +1,23 @@
 #!/opt/puppetlabs/puppet/bin/ruby
 # frozen_string_literal: true
-require 'open3'
-require_relative "../../ruby_task_helper/files/task_helper.rb"
 
+require 'open3'
+require_relative '../../ruby_task_helper/files/task_helper.rb'
+
+# Retrieve facts from the system
 class Facts < TaskHelper
-  def task(opts = {})
+  def task(_opts = {})
     facter_executable = executable(:facter)
     facter_version = component_version(facter_executable)
 
-    facts_command = if facter_version =~ /^[0-2]\./
-                      "#{facter_executable} -p --json"
-                    elsif facter_version =~/^3\./
+    facts_command = if %r{^3\.}.match?(facter_version)
                       "#{facter_executable} -p --json --show-legacy"
                     else
                       # facter 4
                       determine_command_for_facter_4(facter_executable)
                     end
 
-    stdout, stderr, status = Open3.capture3("#{facts_command}")
+    stdout, stderr, status = Open3.capture3(facts_command.to_s)
 
     result = JSON.parse(stdout)
 
@@ -54,14 +54,9 @@ class Facts < TaskHelper
   def determine_command_for_facter_4(facter_executable)
     puppet_executable = executable(:puppet)
     puppet_version = component_version(puppet_executable)
-
-    if puppet_version =~ /^6\./
-      # puppet 6 with facter 4
-      "#{facter_executable} --json --show-legacy"
-    else
-      # puppet 7 with facter 4
-      "#{puppet_executable} facts show --show-legacy --render-as json"
-    end
+    # puppet 7 with facter 4
+    "#{puppet_executable} facts show --show-legacy --render-as json"
+    
   end
 
   def component_version(exec)
@@ -71,6 +66,6 @@ class Facts < TaskHelper
   end
 end
 
-if __FILE__ == $0
+if __FILE__ == $PROGRAM_NAME
   Facts.run
 end

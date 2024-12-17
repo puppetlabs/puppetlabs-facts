@@ -71,17 +71,17 @@ describe 'facts::info' do
   end
 
   context 'ssh, winrm, and pcp targets' do
-    let(:targets) { %w[ssh://host1 winrm://host2 pcp://host3] }
+    let(:targets) { ['ssh://host1', 'winrm://host2', 'pcp://host3'] }
 
     it 'contains OS information for target' do
       expect_task('facts').return_for_targets(
         targets[0] => { 'os' => { 'name' => 'unix', 'family' => 'unix', 'release' => {} } },
         targets[1] => { 'os' => { 'name' => 'win', 'family' => 'win', 'release' => {} } },
-        targets[2] => { 'os' => { 'name' => 'any', 'family' => 'any', 'release' => {} } }
+        targets[2] => { 'os' => { 'name' => 'any', 'family' => 'any', 'release' => {} } },
       )
 
       expect(run_plan('facts::info', 'targets' => targets).value).to eq(
-        ["#{targets[0]}: unix  (unix)", "#{targets[1]}: win  (win)", "#{targets[2]}: any  (any)"]
+        ["#{targets[0]}: unix  (unix)", "#{targets[1]}: win  (win)", "#{targets[2]}: any  (any)"],
       )
     end
 

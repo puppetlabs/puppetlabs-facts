@@ -24,9 +24,9 @@ describe 'facts task', if: fact('osfamily') == 'windows' do
       facts = result[0]['result']
       expect(facts).to include('os')
       expect(facts['os']). to include('family', 'name', 'release')
-      expect(facts['os']['family']).to match(/#{os_family_fact}/)
-      expect(facts['os']['name']).to match(/#{platform}/)
-      expect(release).to match(/#{facts['os']['release']['full']}/)
+      expect(facts['os']['family']).to match(%r{#{os_family_fact}})
+      expect(facts['os']['name']).to match(%r{#{platform}})
+      expect(release).to match(%r{#{facts['os']['release']['full']}})
     end
   end
 end

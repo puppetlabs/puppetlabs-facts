@@ -26,7 +26,7 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output).returns(fact_output)
+      inventory.expects(:add_facts).with(target, fact_output).returns(target)
 
       expect(run_plan('facts', 'targets' => [node]).value).to eq(results(fact_output))
     end
@@ -35,7 +35,7 @@ describe 'facts' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 target")
+      expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("run_task 'facts' failed on 1 target")
     end
   end
 
@@ -44,7 +44,7 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output).returns(fact_output)
+      inventory.expects(:add_facts).with(target, fact_output).returns(target)
 
       expect(run_plan('facts', 'targets' => [node]).value).to eq(results(fact_output))
     end
@@ -53,7 +53,7 @@ describe 'facts' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 target")
+      expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("run_task 'facts' failed on 1 target")
     end
   end
 
@@ -62,7 +62,7 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output).returns(fact_output)
+      inventory.expects(:add_facts).with(target, fact_output).returns(target)
 
       expect(run_plan('facts', 'targets' => [node]).value).to eq(results(fact_output))
     end
@@ -71,7 +71,7 @@ describe 'facts' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 target")
+      expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("run_task 'facts' failed on 1 target")
     end
   end
 
@@ -80,7 +80,7 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output).returns(fact_output)
+      inventory.expects(:add_facts).with(target, fact_output).returns(target)
 
       expect(run_plan('facts', 'targets' => [node]).value).to eq(results(fact_output))
     end
@@ -89,22 +89,22 @@ describe 'facts' do
       expect_task('facts').always_return(err_output)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("Plan aborted: run_task 'facts' failed on 1 target")
+      expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("run_task 'facts' failed on 1 target")
     end
   end
 
   context 'ssh, winrm, and pcp targets' do
-    let(:nodes) { %w[ssh://host1 winrm://host2 pcp://host3] }
+    let(:nodes) { ['ssh://host1', 'winrm://host2', 'pcp://host3'] }
 
     it 'contains OS information for target' do
       target_results = nodes.each_with_object({}) { |node, h| h[node] = fact_output(node) }
       expect_task('facts').return_for_targets(target_results)
       nodes.each do |node|
-        inventory.expects(:add_facts).with(Bolt::Target.new(node), fact_output(node)).returns(fact_output(node))
+        inventory.expects(:add_facts).with(Bolt::Target.new(node), fact_output(node)).returns(target)
       end
 
       result_set = Bolt::ResultSet.new(
-        nodes.map { |node| Bolt::Result.new(Bolt::Target.new(node), value: fact_output(node)) }
+        nodes.map { |node| Bolt::Result.new(Bolt::Target.new(node), value: fact_output(node)) },
       )
       expect(run_plan('facts', 'targets' => nodes).value).to eq(result_set)
     end
@@ -114,7 +114,7 @@ describe 'facts' do
       expect_task('facts').return_for_targets(target_results)
       inventory.expects(:add_facts).never
 
-      expect(run_plan('facts', 'targets' => nodes).value.msg).to eq("Plan aborted: run_task 'facts' failed on 3 targets")
+      expect(run_plan('facts', 'targets' => nodes).value.msg).to eq("run_task 'facts' failed on 3 targets")
     end
   end
 end
