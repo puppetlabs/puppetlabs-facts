@@ -1,0 +1,12 @@
+HOSTS:
+  ubuntu-2004-x64:
+    platform: ubuntu-20.04-amd64
+    hypervisor: docker
+    image: ubuntu:20.04
+    docker_preserve_image: true
+    docker_cmd: '["/sbin/init"]'
+    docker_image_commands:
+      # ensure that systemd is working correctly in the container and install necessary packages
+      - 'apt-get update && apt-get install -y systemd systemd-sysv net-tools wget locales && locale-gen en_US.UTF-8'
+CONFIG:
+  trace_limit: 200
