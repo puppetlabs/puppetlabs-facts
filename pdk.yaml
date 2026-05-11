@@ -1,2 +1,6 @@
 ---
-ignore: []
+ignore:
+- spec/fixtures/configs/invalid.yml
+- spec/fixtures/inventory/empty.yml
+- spec/fixtures/inventory/invalid.yml
+- spec/fixtures/configs/empty.yml
