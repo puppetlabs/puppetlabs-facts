@@ -53,7 +53,6 @@ class Facts < TaskHelper
 
   def determine_command_for_facter_4(_facter_executable)
     puppet_executable = executable(:puppet)
-    puppet_version = component_version(puppet_executable)
     # puppet 7 with facter 4
     "#{puppet_executable} facts show --show-legacy --render-as json"
   end
