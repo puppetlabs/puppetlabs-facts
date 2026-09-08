@@ -26,14 +26,14 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output).returns(target)
+      expect(inventory).to receive(:add_facts).with(target, fact_output).and_return(target)
 
       expect(run_plan('facts', 'targets' => [node]).value).to eq(results(fact_output))
     end
 
     it 'does not mask errors' do
       expect_task('facts').always_return(err_output)
-      inventory.expects(:add_facts).never
+      expect(inventory).not_to receive(:add_facts)
 
       expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("run_task 'facts' failed on 1 target")
     end
@@ -44,14 +44,14 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output).returns(target)
+      expect(inventory).to receive(:add_facts).with(target, fact_output).and_return(target)
 
       expect(run_plan('facts', 'targets' => [node]).value).to eq(results(fact_output))
     end
 
     it 'does not mask errors' do
       expect_task('facts').always_return(err_output)
-      inventory.expects(:add_facts).never
+      expect(inventory).not_to receive(:add_facts)
 
       expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("run_task 'facts' failed on 1 target")
     end
@@ -62,14 +62,14 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output).returns(target)
+      expect(inventory).to receive(:add_facts).with(target, fact_output).and_return(target)
 
       expect(run_plan('facts', 'targets' => [node]).value).to eq(results(fact_output))
     end
 
     it 'does not mask errors' do
       expect_task('facts').always_return(err_output)
-      inventory.expects(:add_facts).never
+      expect(inventory).not_to receive(:add_facts)
 
       expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("run_task 'facts' failed on 1 target")
     end
@@ -80,14 +80,14 @@ describe 'facts' do
 
     it 'adds facts to the Target' do
       expect_task('facts').always_return(fact_output)
-      inventory.expects(:add_facts).with(target, fact_output).returns(target)
+      expect(inventory).to receive(:add_facts).with(target, fact_output).and_return(target)
 
       expect(run_plan('facts', 'targets' => [node]).value).to eq(results(fact_output))
     end
 
     it 'does not mask errors' do
       expect_task('facts').always_return(err_output)
-      inventory.expects(:add_facts).never
+      expect(inventory).not_to receive(:add_facts)
 
       expect(run_plan('facts', 'targets' => [node]).value.msg).to eq("run_task 'facts' failed on 1 target")
     end
@@ -100,7 +100,7 @@ describe 'facts' do
       target_results = nodes.each_with_object({}) { |node, h| h[node] = fact_output(node) }
       expect_task('facts').return_for_targets(target_results)
       nodes.each do |node|
-        inventory.expects(:add_facts).with(Bolt::Target.new(node), fact_output(node)).returns(target)
+        expect(inventory).to receive(:add_facts).with(Bolt::Target.new(node), fact_output(node)).and_return(target)
       end
 
       result_set = Bolt::ResultSet.new(
@@ -112,7 +112,7 @@ describe 'facts' do
     it 'does not mask errors' do
       target_results = nodes.each_with_object({}) { |node, h| h[node] = err_output(node) }
       expect_task('facts').return_for_targets(target_results)
-      inventory.expects(:add_facts).never
+      expect(inventory).not_to receive(:add_facts)
 
       expect(run_plan('facts', 'targets' => nodes).value.msg).to eq("run_task 'facts' failed on 3 targets")
     end
