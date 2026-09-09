@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.configure do |c|
-  c.mock_with :mocha
+  c.mock_with :rspec
 end
 
 require 'puppetlabs_spec_helper/module_spec_helper'
@@ -26,7 +26,7 @@ default_fact_files.each do |f|
 
   begin
     require 'deep_merge'
-    default_facts.deep_merge!(YAML.safe_load(File.read(f), permitted_classes: [], permitted_symbols: [], aliases: true))
+    default_facts.deep_merge!(YAML.safe_load_file(f, permitted_classes: [], permitted_symbols: [], aliases: true))
   rescue StandardError => e
     RSpec.configuration.reporter.message "WARNING: Unable to load #{f}: #{e}"
   end

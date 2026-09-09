@@ -15,7 +15,7 @@ describe 'facts::group_by' do
     # is yielded to from the stubbed group_by method
     verifier.expects(:verify).with(token)
 
-    is_expected.to run.with_params(collection).with_lambda(&(proc do |t|
+    expect(subject).to run.with_params(collection).with_lambda(&(proc do |t|
       verifier.verify(t)
     end)).and_return(return_value)
   end

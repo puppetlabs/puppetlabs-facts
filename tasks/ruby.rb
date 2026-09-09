@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require 'open3'
-require_relative '../../ruby_task_helper/files/task_helper.rb'
+require_relative '../../ruby_task_helper/files/task_helper'
 
 # Retrieve facts from the system
 class Facts < TaskHelper
@@ -21,9 +21,7 @@ class Facts < TaskHelper
 
     result = JSON.parse(stdout)
 
-    if status.exitstatus != 0
-      result[:_error] = { msg: stderr }
-    end
+    result[:_error] = { msg: stderr } if status.exitstatus != 0
 
     result
   end
@@ -51,12 +49,11 @@ class Facts < TaskHelper
     type
   end
 
-  def determine_command_for_facter_4(facter_executable)
+  def determine_command_for_facter_4(_facter_executable)
     puppet_executable = executable(:puppet)
-    puppet_version = component_version(puppet_executable)
+    component_version(puppet_executable)
     # puppet 7 with facter 4
     "#{puppet_executable} facts show --show-legacy --render-as json"
-    
   end
 
   def component_version(exec)
@@ -66,6 +63,4 @@ class Facts < TaskHelper
   end
 end
 
-if __FILE__ == $PROGRAM_NAME
-  Facts.run
-end
+Facts.run if __FILE__ == $PROGRAM_NAME
