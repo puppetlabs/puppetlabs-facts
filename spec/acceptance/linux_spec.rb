@@ -35,6 +35,9 @@ describe 'facts task', unless: os[:family] == 'windows' do
     expect(facts['os']['distro']).to include('codename')
     expect(facts['os']['family']).to eq(expected['os']['family'])
     expect(facts['os']['name']).to eq(expected['os']['name'])
-    expect(facts['os']['release']['full']).to eq(expected['os']['release']['full'])
+    # bash.sh only reads major.minor from /etc/os-release; facter may report a more
+    # precise point release (e.g. Debian's "12.15" vs bash.sh's "12"), so only
+    # require that the more precise value contains bash.sh's value.
+    expect(expected['os']['release']['full']).to match(%r{#{Regexp.escape(facts['os']['release']['full'])}})
   end
 end
