@@ -74,7 +74,6 @@ group :development do
   gem "rubocop-capybara", '~> 2.22.0',           require: false
   gem "rb-readline", '= 0.5.5',                  require: false, platforms: [:windows]
   gem "bigdecimal", '< 3.2.2',                   require: false, platforms: [:windows]
-  gem "github_changelog_generator",              require: false, git: 'https://github.com/skywinder/github-changelog-generator', ref: '20ee04ba1234e9e83eb2ffb5056e23d641c7a018' if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.2.2')
 end
 group :development, :release_prep do
   gem "puppet-strings", '>= 4.0', '< 6.0',     require: false
@@ -83,12 +82,10 @@ group :development, :release_prep do
   gem "puppet-blacksmith", '>= 7.0', '< 10.0', require: false
 end
 group :system_tests do
-  gem "puppet_litmus", '~> 2.5',        require: false
-  gem "faraday", '~> 2.5',              require: false
-  gem "CFPropertyList", '< 3.0.7',      require: false if RUBY_PLATFORM.include?('darwin')
-  gem "serverspec", '~> 2.41',          require: false
-  gem "bolt", '~> 1.15',                require: false if ENV['GEM_BOLT']
-  gem "beaker-task_helper", '~> 1.5.2', require: false if ENV['GEM_BOLT']
+  gem "puppet_litmus", '~> 2.5',   require: false
+  gem "faraday", '~> 2.5',         require: false
+  gem "CFPropertyList", '< 3.0.7', require: false if RUBY_PLATFORM.include?('darwin')
+  gem "serverspec", '~> 2.41',     require: false
 end
 
 gems = {}
