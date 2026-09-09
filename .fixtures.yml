@@ -1,5 +1,9 @@
+---
 fixtures:
-  forge_modules:
-    ruby_task_helper: 'puppetlabs/ruby_task_helper'
+  repositories:
+    provision: "https://github.com/puppetlabs/provision.git"
+    puppet_agent: 'https://github.com/puppetlabs/puppetlabs-puppet_agent.git'
+    # facts: "https://github.com/puppetlabs/puppetlabs-facts.git"
+    ruby_task_helper: "https://github.com/puppetlabs/puppetlabs-ruby_task_helper.git"
   symlinks:
     facts: "#{source_dir}"
