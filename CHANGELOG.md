@@ -1,5 +1,9 @@
 # Change Log
 
+## v2.0.0
+### Changed
+- Puppet 9 compatibility update: bumped requirements to `puppet >= 8.0.0 < 10.0.0` and refreshed the supported OS list (Debian 12, RedHat 9, Ubuntu 22.04, Windows 2016/2019) for the Puppet 9 acceptance matrix. Major version bump reflects the supported-platform/requirements change.
+
 ## v1.7.0
 ### Changed
 - Puppet 8 compatibility update, including `PDK update`.
