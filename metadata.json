@@ -41,7 +41,6 @@
       "version_requirement": ">= 8.0.0 < 10.0.0"
     }
   ],
-  "description": "Tasks that inspect the value of system facts",
   "pdk-version": "3.6.1",
   "template-url": "https://github.com/puppetlabs/pdk-templates.git#main",
   "template-ref": "heads/main-0-gb7f9e32"
