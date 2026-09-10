@@ -1,47 +1,43 @@
 # frozen_string_literal: true
 
 require 'spec_helper_acceptance'
+require 'json'
 
-describe 'facts task' do
-  include Beaker::TaskHelper::Inventory
-  include BoltSpec::Run
+describe 'facts task', unless: os[:family] == 'windows' do
+  let(:script) { File.join(__dir__, '..', '..', 'tasks', 'bash.sh') }
 
-  def bolt_config
-    { 'modulepath' => RSpec.configuration.module_path }
+  it 'returns platform when invoked with platform parameter' do
+    expected = JSON.parse(run_shell('facter --json os').stdout)
+
+    result = bolt_run_script(script, arguments: ['platform'])
+
+    expect(result.exit_code).to eq(0)
+    expect(result.stdout.strip).to eq(expected['os']['name'])
   end
 
-  def bolt_inventory
-    hosts_to_inventory
+  it 'returns release when invoked with release parameter' do
+    expected = JSON.parse(run_shell('facter --json os').stdout)
+
+    result = bolt_run_script(script, arguments: ['release'])
+
+    expect(result.exit_code).to eq(0)
+    expect(expected['os']['release']['full']).to match(%r{#{Regexp.escape(result.stdout.strip)}})
   end
 
-  os_family_fact = fact('osfamily')
-  platform = fact('os.name')
-  release = fact('os.release.full')
+  it 'returns facts json' do
+    expected = JSON.parse(run_shell('facter --json os osfamily').stdout)
 
-  describe 'bash facts implementation', unless: fact_on(default, 'osfamily') == 'windows' do
-    let(:script) { File.join(__dir__, '..', '..', 'tasks', 'bash.sh') }
+    result = run_bolt_task('facts::bash')
+    facts = result.result
 
-    it 'returns platform when invoked with platform parameter' do
-      result = run_script(script, 'default', ['platform'])
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['stdout']).to match(%r{#{platform}})
-    end
-
-    it 'returns release when invoked with release parameter' do
-      result = run_script(script, 'default', ['release'])
-      expect(result[0]['status']).to eq('success')
-      expect(release).to match(%r{#{result[0]['result']['stdout'].strip}})
-    end
-
-    it 'returns facts json' do
-      result = run_task('facts::bash', 'default', {})
-      facts = result[0]['result']
-      expect(facts['os']['distro']).to include('codename')
-      expect(facts).to include('os')
-      expect(facts['os']).to include('family', 'name', 'release')
-      expect(facts['os']['family']).to match(%r{#{os_family_fact}})
-      expect(facts['os']['name']).to match(%r{#{platform}})
-      expect(release).to match(%r{#{facts['os']['release']['full']}})
-    end
+    expect(facts).to include('os')
+    expect(facts['os']).to include('distro', 'family', 'name', 'release')
+    expect(facts['os']['distro']).to include('codename')
+    expect(facts['os']['family']).to eq(expected['os']['family'])
+    expect(facts['os']['name']).to eq(expected['os']['name'])
+    # bash.sh only reads major.minor from /etc/os-release; facter may report a more
+    # precise point release (e.g. Debian's "12.15" vs bash.sh's "12"), so only
+    # require that the more precise value contains bash.sh's value.
+    expect(expected['os']['release']['full']).to match(%r{#{Regexp.escape(facts['os']['release']['full'])}})
   end
 end

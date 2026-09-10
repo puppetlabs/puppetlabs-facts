@@ -3,7 +3,8 @@
 require 'bundler'
 require 'puppet_litmus/rake_tasks' if Gem.loaded_specs.key? 'puppet_litmus'
 require 'puppetlabs_spec_helper/rake_tasks'
-require 'puppet-syntax/tasks/puppet-syntax'
+require 'puppet-syntax/tasks/puppet-syntax' if Gem.loaded_specs.key? 'puppet-syntax'
+require 'puppetlabs-syntax/tasks/puppetlabs-syntax' if Gem.loaded_specs.key? 'puppetlabs-syntax'
 require 'puppet-strings/tasks' if Gem.loaded_specs.key? 'puppet-strings'
 
 PuppetLint.configuration.send('disable_relative')
@@ -15,13 +16,4 @@ PuppetLint.configuration.send('disable_documentation')
 PuppetLint.configuration.send('disable_single_quote_string_with_variables')
 PuppetLint.configuration.fail_on_warnings = true
 PuppetLint.configuration.ignore_paths = [".vendor/**/*.pp", ".bundle/**/*.pp", "pkg/**/*.pp", "spec/**/*.pp", "tests/**/*.pp", "types/**/*.pp", "vendor/**/*.pp"]
-
-# The beaker task requires the test fixtures created by the spec_prep task
-beaker_task_exists = Rake::Task.task_defined?('beaker')
-spec_prep_task_exists = Rake::Task.task_defined?('spec_prep')
-if beaker_task_exists && spec_prep_task_exists
-  beaker_task = Rake::Task['beaker']
-  spec_prep =  Rake::Task['spec_prep']
-  beaker_task.enhance(beaker_task.prerequisite_tasks << spec_prep)
-end
 

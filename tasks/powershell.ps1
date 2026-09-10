@@ -49,9 +49,9 @@ if ([System.Environment]::OSVersion.Platform -gt 2) {
     }
 
     $release = switch($version){
-        '10.0'{ 
+        '10.0'{
             if ($consumerrel) { '10' } else {
-                if ($os.BuildNumber -ge 17763) { '2019' } else {'2016' }
+                if ($os.BuildNumber -ge 20348) { '2022' } elseif ($os.BuildNumber -ge 17763) { '2019' } else {'2016' }
             }
         }
         '6.3' { if ($consumerrel) { '8.1' } else { '2012 R2' } }
