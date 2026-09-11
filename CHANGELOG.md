@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v2.0.0](https://github.com/puppetlabs/puppetlabs-facts/tree/v2.0.0) - 2026-09-10
+## [v1.8.0](https://github.com/puppetlabs/puppetlabs-facts/tree/v1.8.0) - 2026-09-11
 
-[Full Changelog](https://github.com/puppetlabs/puppetlabs-facts/compare/1.7.0...v2.0.0)
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-facts/compare/1.7.0...v1.8.0)
 
 ### Changed
 
+- Revert version bump from major to minor (2.0.0 -> 1.8.0) [#74](https://github.com/puppetlabs/puppetlabs-facts/pull/74) ([gavindidrichsen](https://github.com/gavindidrichsen))
 - (BOLT-193): facts pdk update for Puppet 9 compatibility [#71](https://github.com/puppetlabs/puppetlabs-facts/pull/71) ([gavindidrichsen](https://github.com/gavindidrichsen))
 
-Release notes prior to v2.0.0 have been moved to [ARCHIVE.md](ARCHIVE.md).
+Release notes prior to v1.8.0 have been moved to [ARCHIVE.md](ARCHIVE.md).
