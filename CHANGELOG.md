@@ -9,10 +9,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-facts/compare/v2.0.0...v2.0.1)
 
-## [v2.0.0](https://github.com/puppetlabs/puppetlabs-facts/tree/v2.0.0) - 2026-09-29
-
-[Full Changelog](https://github.com/puppetlabs/puppetlabs-facts/compare/1.7.0...v2.0.0)
-
 ### Changed
 
 - (BOLT-193): facts pdk update for Puppet 9 compatibility [#71](https://github.com/puppetlabs/puppetlabs-facts/pull/71) ([gavindidrichsen](https://github.com/gavindidrichsen))
