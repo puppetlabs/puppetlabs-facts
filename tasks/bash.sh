@@ -126,7 +126,7 @@ munge_name() {
     psbm) echo "PSBM" ;;
     xenserver) echo "XenServer" ;;
     linuxmint) echo "LinuxMint" ;;
-    almalinux) echo "AlmaLinux" ;;
+    almalinux) echo "Almalinux" ;;
     sles) echo "SLES" ;;
     suse) echo "Suse" ;;
     opensuse) echo "OpenSuSE" ;;
