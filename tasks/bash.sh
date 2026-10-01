@@ -72,8 +72,6 @@ _systemd() {
     family='RedHat'
   elif [[ $ID = 'debian' ]]; then
     family='Debian'
-  elif [[ $ID = 'sles' ]]; then
-    family='suse'
   elif [[ $ID_LIKE ]]; then
     family="${ID_LIKE%% *}"
   else
@@ -128,7 +126,7 @@ munge_name() {
     linuxmint) echo "LinuxMint" ;;
     almalinux) echo "Almalinux" ;;
     sles) echo "SLES" ;;
-    suse) echo "Suse" ;;
+    suse) echo "SuSE" ;;
     opensuse) echo "OpenSuSE" ;;
     sunos) echo "SunOS" ;;
     omni) echo "OmniOS" ;;
