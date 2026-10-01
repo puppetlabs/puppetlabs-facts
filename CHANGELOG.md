@@ -5,13 +5,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v2.0.1](https://github.com/puppetlabs/puppetlabs-facts/tree/v2.0.1) - 2026-09-29
+## [v1.8.1](https://github.com/puppetlabs/puppetlabs-facts/tree/v1.8.1) - 2026-10-01
 
-[Full Changelog](https://github.com/puppetlabs/puppetlabs-facts/compare/v2.0.0...v2.0.1)
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-facts/compare/1.7.0...v1.8.1)
 
 ### Changed
 
 - (BOLT-193): facts pdk update for Puppet 9 compatibility [#71](https://github.com/puppetlabs/puppetlabs-facts/pull/71) ([gavindidrichsen](https://github.com/gavindidrichsen))
+
+### Fixed
+
+- (BOLT-205) Revert outputs for SuSE and Almalinux [#80](https://github.com/puppetlabs/puppetlabs-facts/pull/80) ([gavindidrichsen](https://github.com/gavindidrichsen))
 
 ## [1.7.0](https://github.com/puppetlabs/puppetlabs-facts/tree/1.7.0) - 2024-12-17
 
